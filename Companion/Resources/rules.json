@@ -1,0 +1,22 @@
+{
+  "version": "1.0.0",
+  "symptomRules": {
+    "feverRedC": 38.0,
+    "feverYellowLowC": 37.5,
+    "feverYellowHighC": 37.9,
+    "painRed": 7,
+    "painYellow": 4,
+    "diarrheaRedPerDay": 6,
+    "diarrheaYellowLow": 3,
+    "diarrheaYellowHigh": 5,
+    "vomitRedPerDay": 3,
+    "cipnRed": 8,
+    "cipnYellowLow": 5,
+    "cipnYellowHigh": 7
+  },
+  "ostomyRules": {
+    "baselineDays": 14,
+    "emptiesIncreaseYellow": 2,
+    "emptiesIncreaseRed": 4
+  }
+}

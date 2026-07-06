@@ -1,0 +1,696 @@
+{
+  "version": "1.2.0",
+  "guidelineNote": "方案模板参考 NCCN 结肠癌指南（2024）与 ASCO mCRC 治疗指南；具体用药与周期请以门诊医嘱为准。",
+  "categories": [
+    { "code": "chemotherapy", "displayName": "化疗方案", "sortOrder": 1 },
+    { "code": "targeted", "displayName": "靶向药", "sortOrder": 2 },
+    { "code": "inhibitor", "displayName": "抑制剂", "sortOrder": 3 }
+  ],
+  "regimens": [
+    {
+      "code": "FOLFOX",
+      "displayName": "FOLFOX",
+      "category": "chemotherapy",
+      "summary": "奥沙利铂 + 亚叶酸钙 + 5-FU 静脉方案，每 2 周为一周期（双周方案）。",
+      "biomarkerHint": null,
+      "cycleDays": 14,
+      "supportedLines": [1, 2],
+      "isMaintenanceOption": false,
+      "events": [
+        { "type": "infusion", "dayOffset": 0, "hour": 9, "minute": 0, "title": "输液（奥沙利铂 + 亚叶酸钙 + 5-FU）", "mealTiming": null, "repeatEveryCycle": true }
+      ],
+      "checkups": [
+        { "type": "lab", "labType": "CBC", "dayOffset": -1, "hour": 8, "minute": 0, "title": "血常规（CBC）" },
+        { "type": "lab", "labType": "CMP", "dayOffset": -1, "hour": 8, "minute": 0, "title": "肝肾功能（CMP）" },
+        { "type": "lab", "labType": "CEA", "dayOffset": 0, "hour": 8, "minute": 0, "title": "CEA" },
+        { "type": "visit", "labType": null, "dayOffset": 0, "hour": 14, "minute": 0, "title": "门诊复诊" }
+      ]
+    },
+    {
+      "code": "FOLFIRI",
+      "displayName": "FOLFIRI",
+      "category": "chemotherapy",
+      "summary": "伊立替康 + 亚叶酸钙 + 5-FU，每 2 周为一周期。",
+      "biomarkerHint": null,
+      "cycleDays": 14,
+      "supportedLines": [1, 2, 3],
+      "isMaintenanceOption": false,
+      "events": [
+        { "type": "infusion", "dayOffset": 0, "hour": 9, "minute": 0, "title": "输液（伊立替康 + 亚叶酸钙 + 5-FU）", "mealTiming": null, "repeatEveryCycle": true }
+      ],
+      "checkups": [
+        { "type": "lab", "labType": "CBC", "dayOffset": -1, "hour": 8, "minute": 0, "title": "血常规（CBC）" },
+        { "type": "lab", "labType": "CMP", "dayOffset": -1, "hour": 8, "minute": 0, "title": "肝肾功能（CMP）" }
+      ]
+    },
+    {
+      "code": "CAPOX",
+      "displayName": "CAPOX（XELOX）",
+      "category": "chemotherapy",
+      "summary": "奥沙利铂静脉 + 卡培他滨口服（通常第 1–14 天每日两次），每 3 周为一周期。",
+      "biomarkerHint": null,
+      "cycleDays": 21,
+      "supportedLines": [1, 2],
+      "isMaintenanceOption": false,
+      "events": [
+        { "type": "infusion", "dayOffset": 0, "hour": 9, "minute": 0, "title": "输液（奥沙利铂）", "mealTiming": null, "repeatEveryCycle": true },
+        { "type": "oral", "dayOffset": 0, "hour": 8, "minute": 0, "title": "卡培他滨 早（第1–14天，按医嘱）", "mealTiming": "after", "repeatEveryCycle": true },
+        { "type": "oral", "dayOffset": 0, "hour": 20, "minute": 0, "title": "卡培他滨 晚（第1–14天，按医嘱）", "mealTiming": "after", "repeatEveryCycle": true }
+      ],
+      "checkups": [
+        { "type": "lab", "labType": "CBC", "dayOffset": -1, "hour": 8, "minute": 0, "title": "血常规（CBC）" },
+        { "type": "visit", "labType": null, "dayOffset": 0, "hour": 14, "minute": 0, "title": "门诊复诊" }
+      ]
+    },
+    {
+      "code": "FOLFOXIRI",
+      "displayName": "FOLFOXIRI",
+      "category": "chemotherapy",
+      "summary": "奥沙利铂 + 伊立替康 + 5-FU 三联强化化疗，每 2 周为一周期；适用于体能状态良好者。",
+      "biomarkerHint": "通常用于体能状态较好、需强化治疗者",
+      "cycleDays": 14,
+      "supportedLines": [1, 2],
+      "isMaintenanceOption": false,
+      "events": [
+        { "type": "infusion", "dayOffset": 0, "hour": 9, "minute": 0, "title": "输液（奥沙利铂 + 伊立替康 + 5-FU）", "mealTiming": null, "repeatEveryCycle": true }
+      ],
+      "checkups": [
+        { "type": "lab", "labType": "CBC", "dayOffset": -1, "hour": 8, "minute": 0, "title": "血常规（CBC）" },
+        { "type": "lab", "labType": "CMP", "dayOffset": -1, "hour": 8, "minute": 0, "title": "肝肾功能（CMP）" }
+      ]
+    },
+    {
+      "code": "XELIRI",
+      "displayName": "XELIRI",
+      "category": "chemotherapy",
+      "summary": "伊立替康 + 卡培他滨口服，每 3 周为一周期。",
+      "biomarkerHint": null,
+      "cycleDays": 21,
+      "supportedLines": [2, 3],
+      "isMaintenanceOption": false,
+      "events": [
+        { "type": "infusion", "dayOffset": 0, "hour": 9, "minute": 0, "title": "输液（伊立替康）", "mealTiming": null, "repeatEveryCycle": true },
+        { "type": "oral", "dayOffset": 0, "hour": 8, "minute": 0, "title": "卡培他滨 早（按医嘱）", "mealTiming": "after", "repeatEveryCycle": true },
+        { "type": "oral", "dayOffset": 0, "hour": 20, "minute": 0, "title": "卡培他滨 晚（按医嘱）", "mealTiming": "after", "repeatEveryCycle": true }
+      ],
+      "checkups": [
+        { "type": "lab", "labType": "CBC", "dayOffset": -1, "hour": 8, "minute": 0, "title": "血常规（CBC）" }
+      ]
+    },
+    {
+      "code": "CAPECITABINE_MONO",
+      "displayName": "卡培他滨单药",
+      "category": "chemotherapy",
+      "summary": "卡培他滨口服单药，每 3 周为一周期；可用于维持或后线。",
+      "biomarkerHint": null,
+      "allowAsAddon": true,
+      "cycleDays": 21,
+      "supportedLines": [1, 2, 3],
+      "isMaintenanceOption": true,
+      "events": [
+        { "type": "oral", "dayOffset": 0, "hour": 8, "minute": 0, "title": "卡培他滨 早（按医嘱）", "mealTiming": "after", "repeatEveryCycle": true },
+        { "type": "oral", "dayOffset": 0, "hour": 20, "minute": 0, "title": "卡培他滨 晚（按医嘱）", "mealTiming": "after", "repeatEveryCycle": true }
+      ],
+      "checkups": [
+        { "type": "lab", "labType": "CBC", "dayOffset": -1, "hour": 8, "minute": 0, "title": "血常规（CBC）" }
+      ]
+    },
+    {
+      "code": "FLUOROURACIL_LV",
+      "displayName": "5-FU / 亚叶酸钙（de Gramont）",
+      "category": "chemotherapy",
+      "summary": "5-FU 持续静脉输注 + 亚叶酸钙，每 2 周为一周期。",
+      "biomarkerHint": null,
+      "cycleDays": 14,
+      "supportedLines": [2, 3],
+      "isMaintenanceOption": false,
+      "events": [
+        { "type": "infusion", "dayOffset": 0, "hour": 9, "minute": 0, "title": "输液（亚叶酸钙 + 5-FU）", "mealTiming": null, "repeatEveryCycle": true }
+      ],
+      "checkups": [
+        { "type": "lab", "labType": "CBC", "dayOffset": -1, "hour": 8, "minute": 0, "title": "血常规（CBC）" }
+      ]
+    },
+    {
+      "code": "TAS102",
+      "displayName": "TAS-102（曲氟尿苷/替吡嘧啶）",
+      "category": "chemotherapy",
+      "summary": "口服后线化疗，通常每 4 周为一周期（第1–5天及第15–19天服药，按医嘱）。",
+      "biomarkerHint": "多用于既往接受过氟尿嘧啶、奥沙利铂、伊立替康者",
+      "allowAsAddon": true,
+      "cycleDays": 28,
+      "supportedLines": [3],
+      "isMaintenanceOption": false,
+      "events": [
+        { "type": "oral", "dayOffset": 0, "hour": 8, "minute": 0, "title": "TAS-102 早（按医嘱周期内服药日）", "mealTiming": "after", "repeatEveryCycle": true },
+        { "type": "oral", "dayOffset": 0, "hour": 20, "minute": 0, "title": "TAS-102 晚（按医嘱周期内服药日）", "mealTiming": "after", "repeatEveryCycle": true }
+      ],
+      "checkups": [
+        { "type": "lab", "labType": "CBC", "dayOffset": -1, "hour": 8, "minute": 0, "title": "血常规（CBC）" }
+      ]
+    },
+
+    {
+      "code": "FOLFOX_BEV",
+      "displayName": "FOLFOX + 贝伐珠单抗",
+      "category": "targeted",
+      "summary": "FOLFOX 联合抗 VEGF 治疗；贝伐珠单抗通常每 2 周给药。",
+      "biomarkerHint": "适用于需抗血管生成治疗者；不推荐与抗 EGFR 联用",
+      "cycleDays": 14,
+      "supportedLines": [1, 2],
+      "isMaintenanceOption": false,
+      "events": [
+        { "type": "infusion", "dayOffset": 0, "hour": 9, "minute": 0, "title": "贝伐珠单抗输注", "mealTiming": null, "repeatEveryCycle": true },
+        { "type": "infusion", "dayOffset": 0, "hour": 10, "minute": 30, "title": "输液（FOLFOX）", "mealTiming": null, "repeatEveryCycle": true }
+      ],
+      "checkups": [
+        { "type": "lab", "labType": "CBC", "dayOffset": -1, "hour": 8, "minute": 0, "title": "血常规（CBC）" },
+        { "type": "lab", "labType": "CMP", "dayOffset": -1, "hour": 8, "minute": 0, "title": "肝肾功能（CMP）" },
+        { "type": "lab", "labType": "CEA", "dayOffset": 0, "hour": 8, "minute": 0, "title": "CEA" }
+      ]
+    },
+    {
+      "code": "FOLFIRI_BEV",
+      "displayName": "FOLFIRI + 贝伐珠单抗",
+      "category": "targeted",
+      "summary": "FOLFIRI 联合贝伐珠单抗，每 2 周为一周期。",
+      "biomarkerHint": null,
+      "cycleDays": 14,
+      "supportedLines": [1, 2, 3],
+      "isMaintenanceOption": false,
+      "events": [
+        { "type": "infusion", "dayOffset": 0, "hour": 9, "minute": 0, "title": "贝伐珠单抗输注", "mealTiming": null, "repeatEveryCycle": true },
+        { "type": "infusion", "dayOffset": 0, "hour": 10, "minute": 30, "title": "输液（FOLFIRI）", "mealTiming": null, "repeatEveryCycle": true }
+      ],
+      "checkups": [
+        { "type": "lab", "labType": "CBC", "dayOffset": -1, "hour": 8, "minute": 0, "title": "血常规（CBC）" }
+      ]
+    },
+    {
+      "code": "CAPOX_BEV",
+      "displayName": "CAPOX + 贝伐珠单抗",
+      "category": "targeted",
+      "summary": "CAPOX 联合贝伐珠单抗，每 3 周为一周期。",
+      "biomarkerHint": null,
+      "cycleDays": 21,
+      "supportedLines": [1, 2],
+      "isMaintenanceOption": false,
+      "events": [
+        { "type": "infusion", "dayOffset": 0, "hour": 9, "minute": 0, "title": "贝伐珠单抗 + 奥沙利铂输注", "mealTiming": null, "repeatEveryCycle": true },
+        { "type": "oral", "dayOffset": 0, "hour": 8, "minute": 0, "title": "卡培他滨 早（第1–14天）", "mealTiming": "after", "repeatEveryCycle": true },
+        { "type": "oral", "dayOffset": 0, "hour": 20, "minute": 0, "title": "卡培他滨 晚（第1–14天）", "mealTiming": "after", "repeatEveryCycle": true }
+      ],
+      "checkups": [
+        { "type": "lab", "labType": "CBC", "dayOffset": -1, "hour": 8, "minute": 0, "title": "血常规（CBC）" }
+      ]
+    },
+    {
+      "code": "FOLFOXIRI_BEV",
+      "displayName": "FOLFOXIRI + 贝伐珠单抗",
+      "category": "targeted",
+      "summary": "三联化疗联合贝伐珠单抗，每 2 周为一周期。",
+      "biomarkerHint": "强化方案，需评估体能状态",
+      "cycleDays": 14,
+      "supportedLines": [1],
+      "isMaintenanceOption": false,
+      "events": [
+        { "type": "infusion", "dayOffset": 0, "hour": 9, "minute": 0, "title": "贝伐珠单抗输注", "mealTiming": null, "repeatEveryCycle": true },
+        { "type": "infusion", "dayOffset": 0, "hour": 10, "minute": 30, "title": "输液（FOLFOXIRI）", "mealTiming": null, "repeatEveryCycle": true }
+      ],
+      "checkups": [
+        { "type": "lab", "labType": "CBC", "dayOffset": -1, "hour": 8, "minute": 0, "title": "血常规（CBC）" }
+      ]
+    },
+    {
+      "code": "FOLFOXIRI_PANIT",
+      "displayName": "FOLFOXIRI + 帕尼单抗",
+      "category": "targeted",
+      "summary": "三联化疗联合抗 EGFR 单抗，每 2 周为一周期；适用于 RAS 野生型且体能状态良好者。",
+      "biomarkerHint": "RAS 野生型；强化方案",
+      "cycleDays": 14,
+      "supportedLines": [1, 2],
+      "isMaintenanceOption": false,
+      "events": [
+        { "type": "infusion", "dayOffset": 0, "hour": 9, "minute": 0, "title": "帕尼单抗输注", "mealTiming": null, "repeatEveryCycle": true },
+        { "type": "infusion", "dayOffset": 0, "hour": 10, "minute": 30, "title": "输液（FOLFOXIRI）", "mealTiming": null, "repeatEveryCycle": true }
+      ],
+      "checkups": [
+        { "type": "lab", "labType": "CBC", "dayOffset": -1, "hour": 8, "minute": 0, "title": "血常规（CBC）" }
+      ]
+    },
+    {
+      "code": "FOLFOX_CETUX",
+      "displayName": "FOLFOX + 西妥昔单抗",
+      "category": "targeted",
+      "summary": "FOLFOX 联合抗 EGFR 单抗；适用于 RAS 野生型肿瘤。",
+      "biomarkerHint": "RAS 野生型；左半结肠肿瘤更常考虑抗 EGFR",
+      "cycleDays": 14,
+      "supportedLines": [1, 2],
+      "isMaintenanceOption": false,
+      "events": [
+        { "type": "infusion", "dayOffset": 0, "hour": 9, "minute": 0, "title": "西妥昔单抗输注", "mealTiming": null, "repeatEveryCycle": true },
+        { "type": "infusion", "dayOffset": 0, "hour": 11, "minute": 0, "title": "输液（FOLFOX）", "mealTiming": null, "repeatEveryCycle": true }
+      ],
+      "checkups": [
+        { "type": "lab", "labType": "CBC", "dayOffset": -1, "hour": 8, "minute": 0, "title": "血常规（CBC）" }
+      ]
+    },
+    {
+      "code": "FOLFIRI_CETUX",
+      "displayName": "FOLFIRI + 西妥昔单抗",
+      "category": "targeted",
+      "summary": "FOLFIRI 联合西妥昔单抗，每 2 周为一周期。",
+      "biomarkerHint": "RAS 野生型",
+      "cycleDays": 14,
+      "supportedLines": [1, 2, 3],
+      "isMaintenanceOption": false,
+      "events": [
+        { "type": "infusion", "dayOffset": 0, "hour": 9, "minute": 0, "title": "西妥昔单抗输注", "mealTiming": null, "repeatEveryCycle": true },
+        { "type": "infusion", "dayOffset": 0, "hour": 11, "minute": 0, "title": "输液（FOLFIRI）", "mealTiming": null, "repeatEveryCycle": true }
+      ],
+      "checkups": [
+        { "type": "lab", "labType": "CBC", "dayOffset": -1, "hour": 8, "minute": 0, "title": "血常规（CBC）" }
+      ]
+    },
+    {
+      "code": "FOLFOX_PANIT",
+      "displayName": "FOLFOX + 帕尼单抗",
+      "category": "targeted",
+      "summary": "FOLFOX 联合帕尼单抗，每 2 周为一周期。",
+      "biomarkerHint": "RAS 野生型",
+      "cycleDays": 14,
+      "supportedLines": [1, 2],
+      "isMaintenanceOption": false,
+      "events": [
+        { "type": "infusion", "dayOffset": 0, "hour": 9, "minute": 0, "title": "帕尼单抗输注", "mealTiming": null, "repeatEveryCycle": true },
+        { "type": "infusion", "dayOffset": 0, "hour": 11, "minute": 0, "title": "输液（FOLFOX）", "mealTiming": null, "repeatEveryCycle": true }
+      ],
+      "checkups": [
+        { "type": "lab", "labType": "CBC", "dayOffset": -1, "hour": 8, "minute": 0, "title": "血常规（CBC）" }
+      ]
+    },
+    {
+      "code": "FOLFIRI_PANIT",
+      "displayName": "FOLFIRI + 帕尼单抗",
+      "category": "targeted",
+      "summary": "FOLFIRI 联合帕尼单抗，每 2 周为一周期。",
+      "biomarkerHint": "RAS 野生型",
+      "cycleDays": 14,
+      "supportedLines": [1, 2, 3],
+      "isMaintenanceOption": false,
+      "events": [
+        { "type": "infusion", "dayOffset": 0, "hour": 9, "minute": 0, "title": "帕尼单抗输注", "mealTiming": null, "repeatEveryCycle": true },
+        { "type": "infusion", "dayOffset": 0, "hour": 11, "minute": 0, "title": "输液（FOLFIRI）", "mealTiming": null, "repeatEveryCycle": true }
+      ],
+      "checkups": [
+        { "type": "lab", "labType": "CBC", "dayOffset": -1, "hour": 8, "minute": 0, "title": "血常规（CBC）" }
+      ]
+    },
+    {
+      "code": "RAMUCIRUMAB_FOLFIRI",
+      "displayName": "雷莫芦单抗 + FOLFIRI",
+      "category": "targeted",
+      "summary": "二线及以后：雷莫芦单抗联合 FOLFIRI，每 2 周为一周期。",
+      "biomarkerHint": "多用于既往含贝伐珠单抗治疗后的二线方案",
+      "cycleDays": 14,
+      "supportedLines": [2, 3],
+      "isMaintenanceOption": false,
+      "events": [
+        { "type": "infusion", "dayOffset": 0, "hour": 9, "minute": 0, "title": "雷莫芦单抗输注", "mealTiming": null, "repeatEveryCycle": true },
+        { "type": "infusion", "dayOffset": 0, "hour": 10, "minute": 30, "title": "输液（FOLFIRI）", "mealTiming": null, "repeatEveryCycle": true }
+      ],
+      "checkups": [
+        { "type": "lab", "labType": "CBC", "dayOffset": -1, "hour": 8, "minute": 0, "title": "血常规（CBC）" }
+      ]
+    },
+    {
+      "code": "AFLIBERCEPT_FOLFIRI",
+      "displayName": "阿柏西普 + FOLFIRI",
+      "category": "targeted",
+      "summary": "阿柏西普（抗 VEGF 融合蛋白）联合 FOLFIRI，每 2 周为一周期。",
+      "biomarkerHint": "多用于二线治疗",
+      "cycleDays": 14,
+      "supportedLines": [2, 3],
+      "isMaintenanceOption": false,
+      "events": [
+        { "type": "infusion", "dayOffset": 0, "hour": 9, "minute": 0, "title": "阿柏西普输注", "mealTiming": null, "repeatEveryCycle": true },
+        { "type": "infusion", "dayOffset": 0, "hour": 10, "minute": 30, "title": "输液（FOLFIRI）", "mealTiming": null, "repeatEveryCycle": true }
+      ],
+      "checkups": [
+        { "type": "lab", "labType": "CBC", "dayOffset": -1, "hour": 8, "minute": 0, "title": "血常规（CBC）" }
+      ]
+    },
+    {
+      "code": "ENCORAFENIB_CETUXIMAB",
+      "displayName": "Encorafenib + 西妥昔单抗",
+      "category": "targeted",
+      "summary": "BRAF V600E 突变后线：BRAF 抑制剂口服 + 西妥昔单抗每 2 周输注。",
+      "biomarkerHint": "BRAF V600E 突变",
+      "cycleDays": 28,
+      "supportedLines": [2, 3],
+      "isMaintenanceOption": false,
+      "events": [
+        { "type": "oral", "dayOffset": 0, "hour": 8, "minute": 0, "title": "Encorafenib 口服（每日，按医嘱）", "mealTiming": "any", "repeatEveryCycle": true },
+        { "type": "infusion", "dayOffset": 0, "hour": 10, "minute": 0, "title": "西妥昔单抗输注", "mealTiming": null, "repeatEveryCycle": true },
+        { "type": "infusion", "dayOffset": 14, "hour": 10, "minute": 0, "title": "西妥昔单抗输注（Q2W）", "mealTiming": null, "repeatEveryCycle": true }
+      ],
+      "checkups": [
+        { "type": "lab", "labType": "CMP", "dayOffset": -1, "hour": 8, "minute": 0, "title": "肝肾功能（CMP）" }
+      ]
+    },
+    {
+      "code": "REGORAFENIB",
+      "displayName": "瑞戈非尼单药",
+      "category": "targeted",
+      "summary": "口服多激酶抑制剂，通常每 3 周为一周期（第1–21天服药，按医嘱）。",
+      "biomarkerHint": "后线治疗",
+      "allowAsAddon": true,
+      "cycleDays": 21,
+      "supportedLines": [3],
+      "isMaintenanceOption": false,
+      "events": [
+        { "type": "oral", "dayOffset": 0, "hour": 8, "minute": 0, "title": "瑞戈非尼（按医嘱服药日）", "mealTiming": "after", "repeatEveryCycle": true }
+      ],
+      "checkups": [
+        { "type": "lab", "labType": "CBC", "dayOffset": -1, "hour": 8, "minute": 0, "title": "血常规（CBC）" },
+        { "type": "lab", "labType": "CMP", "dayOffset": -1, "hour": 8, "minute": 0, "title": "肝肾功能（CMP）" }
+      ]
+    },
+    {
+      "code": "BEVACIZUMAB_MAINT_Q2W",
+      "displayName": "贝伐珠单抗维持（Q2W）",
+      "category": "targeted",
+      "summary": "诱导治疗后进入维持：贝伐珠单抗每 2 周输注，可联合氟尿嘧啶类药物。",
+      "biomarkerHint": null,
+      "allowAsAddon": true,
+      "cycleDays": 14,
+      "supportedLines": [1, 2, 3],
+      "isMaintenanceOption": true,
+      "events": [
+        { "type": "infusion", "dayOffset": 0, "hour": 10, "minute": 0, "title": "贝伐珠单抗维持输注", "mealTiming": null, "repeatEveryCycle": true }
+      ],
+      "checkups": [
+        { "type": "lab", "labType": "CEA", "dayOffset": 0, "hour": 8, "minute": 0, "title": "CEA" }
+      ]
+    },
+    {
+      "code": "BEVACIZUMAB_MAINT_Q3W",
+      "displayName": "贝伐珠单抗维持（Q3W）",
+      "category": "targeted",
+      "summary": "贝伐珠单抗每 3 周输注的维持方案（按当地实践与医嘱）。",
+      "biomarkerHint": null,
+      "cycleDays": 21,
+      "supportedLines": [1, 2, 3],
+      "isMaintenanceOption": true,
+      "events": [
+        { "type": "infusion", "dayOffset": 0, "hour": 10, "minute": 0, "title": "贝伐珠单抗维持输注（Q3W）", "mealTiming": null, "repeatEveryCycle": true }
+      ],
+      "checkups": []
+    },
+    {
+      "code": "CETUXIMAB_MAINT_Q2W",
+      "displayName": "西妥昔单抗维持（Q2W）",
+      "category": "targeted",
+      "summary": "抗 EGFR 维持治疗，每 2 周输注；RAS 野生型。",
+      "biomarkerHint": "RAS 野生型",
+      "allowAsAddon": true,
+      "cycleDays": 14,
+      "supportedLines": [1, 2, 3],
+      "isMaintenanceOption": true,
+      "events": [
+        { "type": "infusion", "dayOffset": 0, "hour": 10, "minute": 0, "title": "西妥昔单抗维持输注", "mealTiming": null, "repeatEveryCycle": true }
+      ],
+      "checkups": []
+    },
+    {
+      "code": "PANITUMUMAB_MAINT_Q2W",
+      "displayName": "帕尼单抗维持（Q2W）",
+      "category": "targeted",
+      "summary": "帕尼单抗维持，每 2 周输注；RAS 野生型。",
+      "biomarkerHint": "RAS 野生型",
+      "allowAsAddon": true,
+      "cycleDays": 14,
+      "supportedLines": [1, 2, 3],
+      "isMaintenanceOption": true,
+      "events": [
+        { "type": "infusion", "dayOffset": 0, "hour": 10, "minute": 0, "title": "帕尼单抗维持输注", "mealTiming": null, "repeatEveryCycle": true }
+      ],
+      "checkups": []
+    },
+    {
+      "code": "CAPECITABINE_BEV_MAINT",
+      "displayName": "卡培他滨 + 贝伐珠单抗维持",
+      "category": "targeted",
+      "summary": "诱导后维持：卡培他滨口服联合贝伐珠单抗每 3 周。",
+      "biomarkerHint": null,
+      "cycleDays": 21,
+      "supportedLines": [1, 2, 3],
+      "isMaintenanceOption": true,
+      "events": [
+        { "type": "infusion", "dayOffset": 0, "hour": 10, "minute": 0, "title": "贝伐珠单抗输注", "mealTiming": null, "repeatEveryCycle": true },
+        { "type": "oral", "dayOffset": 0, "hour": 8, "minute": 0, "title": "卡培他滨 早（按医嘱）", "mealTiming": "after", "repeatEveryCycle": true },
+        { "type": "oral", "dayOffset": 0, "hour": 20, "minute": 0, "title": "卡培他滨 晚（按医嘱）", "mealTiming": "after", "repeatEveryCycle": true }
+      ],
+      "checkups": [
+        { "type": "lab", "labType": "CEA", "dayOffset": 0, "hour": 8, "minute": 0, "title": "CEA" }
+      ]
+    },
+
+    {
+      "code": "PEMBROLIZUMAB_Q3W",
+      "displayName": "帕博利珠单抗（Q3W）",
+      "category": "inhibitor",
+      "summary": "PD-1 抑制剂，每 3 周静脉输注；MSI-H/dMMR 转移性结直肠癌一线推荐。",
+      "biomarkerHint": "MSI-H 或 dMMR",
+      "cycleDays": 21,
+      "supportedLines": [1, 2, 3],
+      "isMaintenanceOption": false,
+      "events": [
+        { "type": "infusion", "dayOffset": 0, "hour": 10, "minute": 0, "title": "帕博利珠单抗输注", "mealTiming": null, "repeatEveryCycle": true }
+      ],
+      "checkups": [
+        { "type": "lab", "labType": "CBC", "dayOffset": -1, "hour": 8, "minute": 0, "title": "血常规（CBC）" },
+        { "type": "lab", "labType": "CMP", "dayOffset": -1, "hour": 8, "minute": 0, "title": "肝肾功能（CMP）" },
+        { "type": "visit", "labType": null, "dayOffset": 0, "hour": 14, "minute": 0, "title": "免疫治疗门诊评估" }
+      ]
+    },
+    {
+      "code": "PEMBROLIZUMAB_Q6W",
+      "displayName": "帕博利珠单抗（Q6W）",
+      "category": "inhibitor",
+      "summary": "PD-1 抑制剂延长给药间隔，每 6 周输注（按医嘱与适应证）。",
+      "biomarkerHint": "MSI-H 或 dMMR",
+      "cycleDays": 42,
+      "supportedLines": [1, 2, 3],
+      "isMaintenanceOption": false,
+      "events": [
+        { "type": "infusion", "dayOffset": 0, "hour": 10, "minute": 0, "title": "帕博利珠单抗输注（Q6W）", "mealTiming": null, "repeatEveryCycle": true }
+      ],
+      "checkups": [
+        { "type": "lab", "labType": "CMP", "dayOffset": -1, "hour": 8, "minute": 0, "title": "肝肾功能（CMP）" }
+      ]
+    },
+    {
+      "code": "NIVOLUMAB_Q2W",
+      "displayName": "纳武利尤单抗（Q2W）",
+      "category": "inhibitor",
+      "summary": "PD-1 抑制剂，每 2 周输注；用于 MSI-H/dMMR 结直肠癌。",
+      "biomarkerHint": "MSI-H 或 dMMR",
+      "cycleDays": 14,
+      "supportedLines": [1, 2, 3],
+      "isMaintenanceOption": false,
+      "events": [
+        { "type": "infusion", "dayOffset": 0, "hour": 10, "minute": 0, "title": "纳武利尤单抗输注", "mealTiming": null, "repeatEveryCycle": true }
+      ],
+      "checkups": [
+        { "type": "lab", "labType": "CBC", "dayOffset": -1, "hour": 8, "minute": 0, "title": "血常规（CBC）" },
+        { "type": "lab", "labType": "CMP", "dayOffset": -1, "hour": 8, "minute": 0, "title": "肝肾功能（CMP）" }
+      ]
+    },
+    {
+      "code": "NIVOLUMAB_Q4W",
+      "displayName": "纳武利尤单抗（Q4W）",
+      "category": "inhibitor",
+      "summary": "纳武利尤单抗每 4 周输注的给药方案（按医嘱）。",
+      "biomarkerHint": "MSI-H 或 dMMR",
+      "cycleDays": 28,
+      "supportedLines": [1, 2, 3],
+      "isMaintenanceOption": false,
+      "events": [
+        { "type": "infusion", "dayOffset": 0, "hour": 10, "minute": 0, "title": "纳武利尤单抗输注（Q4W）", "mealTiming": null, "repeatEveryCycle": true }
+      ],
+      "checkups": [
+        { "type": "lab", "labType": "CMP", "dayOffset": -1, "hour": 8, "minute": 0, "title": "肝肾功能（CMP）" }
+      ]
+    },
+    {
+      "code": "NIVOLUMAB_IPILIMUMAB",
+      "displayName": "纳武利尤单抗 + 伊匹木单抗",
+      "category": "inhibitor",
+      "summary": "PD-1 + CTLA-4 双免疫：诱导期通常每 3 周共 4 次，其后纳武利尤单抗单药维持（按医嘱）。",
+      "biomarkerHint": "MSI-H 或 dMMR；CheckMate 8HW 等研究支持一线应用",
+      "cycleDays": 21,
+      "supportedLines": [1, 2],
+      "isMaintenanceOption": false,
+      "events": [
+        { "type": "infusion", "dayOffset": 0, "hour": 9, "minute": 0, "title": "纳武利尤单抗输注", "mealTiming": null, "repeatEveryCycle": true },
+        { "type": "infusion", "dayOffset": 0, "hour": 10, "minute": 30, "title": "伊匹木单抗输注（诱导期）", "mealTiming": null, "repeatEveryCycle": true }
+      ],
+      "checkups": [
+        { "type": "lab", "labType": "CBC", "dayOffset": -1, "hour": 8, "minute": 0, "title": "血常规（CBC）" },
+        { "type": "lab", "labType": "CMP", "dayOffset": -1, "hour": 8, "minute": 0, "title": "肝肾功能（CMP）" },
+        { "type": "visit", "labType": null, "dayOffset": 0, "hour": 14, "minute": 0, "title": "免疫治疗门诊评估" }
+      ]
+    },
+    {
+      "code": "ATEZOLIZUMAB_BEV",
+      "displayName": "阿替利珠单抗 + 贝伐珠单抗",
+      "category": "inhibitor",
+      "summary": "PD-L1 抑制剂联合抗 VEGF；部分不可切除肝细胞癌方案亦见报道，结直肠需按医嘱与适应证。",
+      "biomarkerHint": "按肿瘤类型与指南适应证；非 MSI-H 人群需个体化",
+      "cycleDays": 21,
+      "supportedLines": [1, 2],
+      "isMaintenanceOption": false,
+      "events": [
+        { "type": "infusion", "dayOffset": 0, "hour": 9, "minute": 0, "title": "阿替利珠单抗输注", "mealTiming": null, "repeatEveryCycle": true },
+        { "type": "infusion", "dayOffset": 0, "hour": 10, "minute": 30, "title": "贝伐珠单抗输注", "mealTiming": null, "repeatEveryCycle": true }
+      ],
+      "checkups": [
+        { "type": "lab", "labType": "CMP", "dayOffset": -1, "hour": 8, "minute": 0, "title": "肝肾功能（CMP）" }
+      ]
+    },
+    {
+      "code": "DURVALUMAB_Q4W",
+      "displayName": "度伐利尤单抗（Q4W）",
+      "category": "inhibitor",
+      "summary": "PD-L1 抑制剂，每 4 周输注；在特定分子亚型或试验背景下使用（按医嘱）。",
+      "biomarkerHint": "按适应证与分子标志物",
+      "cycleDays": 28,
+      "supportedLines": [2, 3],
+      "isMaintenanceOption": false,
+      "events": [
+        { "type": "infusion", "dayOffset": 0, "hour": 10, "minute": 0, "title": "度伐利尤单抗输注", "mealTiming": null, "repeatEveryCycle": true }
+      ],
+      "checkups": [
+        { "type": "lab", "labType": "CMP", "dayOffset": -1, "hour": 8, "minute": 0, "title": "肝肾功能（CMP）" }
+      ]
+    },
+    {
+      "code": "TISLELIZUMAB_Q3W",
+      "displayName": "替雷利珠单抗（Q3W）",
+      "category": "inhibitor",
+      "summary": "PD-1 抑制剂，每 3 周输注；MSI-H/dMMR 结直肠癌可参考免疫治疗路径（按国内批准与医嘱）。",
+      "biomarkerHint": "MSI-H 或 dMMR",
+      "cycleDays": 21,
+      "supportedLines": [1, 2, 3],
+      "isMaintenanceOption": false,
+      "events": [
+        { "type": "infusion", "dayOffset": 0, "hour": 10, "minute": 0, "title": "替雷利珠单抗输注", "mealTiming": null, "repeatEveryCycle": true }
+      ],
+      "checkups": [
+        { "type": "lab", "labType": "CBC", "dayOffset": -1, "hour": 8, "minute": 0, "title": "血常规（CBC）" }
+      ]
+    },
+    {
+      "code": "SINTILIMAB_Q3W",
+      "displayName": "信迪利单抗（Q3W）",
+      "category": "inhibitor",
+      "summary": "PD-1 抑制剂，每 3 周输注；用于 MSI-H/dMMR 等免疫治疗适应证（按医嘱）。",
+      "biomarkerHint": "MSI-H 或 dMMR",
+      "cycleDays": 21,
+      "supportedLines": [1, 2, 3],
+      "isMaintenanceOption": false,
+      "events": [
+        { "type": "infusion", "dayOffset": 0, "hour": 10, "minute": 0, "title": "信迪利单抗输注", "mealTiming": null, "repeatEveryCycle": true }
+      ],
+      "checkups": [
+        { "type": "lab", "labType": "CBC", "dayOffset": -1, "hour": 8, "minute": 0, "title": "血常规（CBC）" }
+      ]
+    },
+    {
+      "code": "TRASTUZUMAB_PERTUZUMAB_FOLFIRI",
+      "displayName": "曲妥珠单抗 + 帕妥珠单抗 + FOLFIRI",
+      "category": "targeted",
+      "summary": "HER2 阳性转移性结直肠癌：双抗 HER2 治疗联合 FOLFIRI，每 2 周为一周期（按医嘱与适应证）。",
+      "biomarkerHint": "HER2 阳性（IHC3+ 或 IHC2+/FISH+）",
+      "cycleDays": 14,
+      "supportedLines": [2, 3],
+      "isMaintenanceOption": false,
+      "events": [
+        { "type": "infusion", "dayOffset": 0, "hour": 9, "minute": 0, "title": "曲妥珠单抗输注", "mealTiming": null, "repeatEveryCycle": true },
+        { "type": "infusion", "dayOffset": 0, "hour": 9, "minute": 45, "title": "帕妥珠单抗输注", "mealTiming": null, "repeatEveryCycle": true },
+        { "type": "infusion", "dayOffset": 0, "hour": 11, "minute": 0, "title": "输液（FOLFIRI）", "mealTiming": null, "repeatEveryCycle": true }
+      ],
+      "checkups": [
+        { "type": "lab", "labType": "CBC", "dayOffset": -1, "hour": 8, "minute": 0, "title": "血常规（CBC）" },
+        { "type": "lab", "labType": "CMP", "dayOffset": -1, "hour": 8, "minute": 0, "title": "肝肾功能（CMP）" }
+      ]
+    },
+    {
+      "code": "FRUQUINTINIB",
+      "displayName": "呋喹替尼",
+      "category": "targeted",
+      "summary": "口服 TKI，常用于后线；通常每 4 周为一周期（第1–21天服药，按医嘱）。",
+      "biomarkerHint": "后线治疗；可与既往化疗/靶向序贯或联合（以医嘱为准）",
+      "allowAsAddon": true,
+      "cycleDays": 28,
+      "supportedLines": [3],
+      "isMaintenanceOption": false,
+      "events": [
+        { "type": "oral", "dayOffset": 0, "hour": 8, "minute": 0, "title": "呋喹替尼（按医嘱服药日）", "mealTiming": "any", "repeatEveryCycle": true }
+      ],
+      "checkups": [
+        { "type": "lab", "labType": "CBC", "dayOffset": -1, "hour": 8, "minute": 0, "title": "血常规（CBC）" },
+        { "type": "lab", "labType": "CMP", "dayOffset": -1, "hour": 8, "minute": 0, "title": "肝肾功能（CMP）" }
+      ]
+    },
+    {
+      "code": "TRASTUZUMAB_ADDON",
+      "displayName": "曲妥珠单抗（加用）",
+      "category": "targeted",
+      "summary": "HER2 靶向加用：曲妥珠单抗每 3 周输注，常与化疗或其他靶向联合。",
+      "biomarkerHint": "HER2 阳性",
+      "addonOnly": true,
+      "allowAsAddon": true,
+      "cycleDays": 21,
+      "supportedLines": [2, 3],
+      "isMaintenanceOption": false,
+      "events": [
+        { "type": "infusion", "dayOffset": 0, "hour": 9, "minute": 0, "title": "曲妥珠单抗输注", "mealTiming": null, "repeatEveryCycle": true }
+      ],
+      "checkups": []
+    },
+    {
+      "code": "PERTUZUMAB_ADDON",
+      "displayName": "帕妥珠单抗（加用）",
+      "category": "targeted",
+      "summary": "HER2 双抗治疗中的帕妥珠单抗加用，每 3 周输注（按医嘱）。",
+      "biomarkerHint": "HER2 阳性",
+      "addonOnly": true,
+      "allowAsAddon": true,
+      "cycleDays": 21,
+      "supportedLines": [2, 3],
+      "isMaintenanceOption": false,
+      "events": [
+        { "type": "infusion", "dayOffset": 0, "hour": 9, "minute": 0, "title": "帕妥珠单抗输注", "mealTiming": null, "repeatEveryCycle": true }
+      ],
+      "checkups": []
+    },
+    {
+      "code": "BEVACIZUMAB_ADDON",
+      "displayName": "贝伐珠单抗（加用）",
+      "category": "targeted",
+      "summary": "抗 VEGF 加用，每 2 周输注；用于后线或与口服药/化疗联合。",
+      "biomarkerHint": null,
+      "addonOnly": true,
+      "allowAsAddon": true,
+      "cycleDays": 14,
+      "supportedLines": [2, 3],
+      "isMaintenanceOption": false,
+      "events": [
+        { "type": "infusion", "dayOffset": 0, "hour": 10, "minute": 0, "title": "贝伐珠单抗加用输注", "mealTiming": null, "repeatEveryCycle": true }
+      ],
+      "checkups": []
+    }
+  ]
+}

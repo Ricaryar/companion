@@ -1,0 +1,543 @@
+{
+  "version": "1.0.0",
+  "guidelineNote": "内容参考 NCCN 结肠癌指南（2024）、ASCO mCRC 指南、CSCO 结直肠癌诊疗指南及药品说明书，仅供健康教育，请以门诊医嘱为准。",
+  "reviewedAt": "2026-06-28",
+  "regimenDrugs": {
+    "FOLFOX": ["OXALIPLATIN", "FLUOROURACIL"],
+    "FOLFIRI": ["IRINOTECAN", "FLUOROURACIL"],
+    "CAPOX": ["OXALIPLATIN", "CAPECITABINE"],
+    "FOLFOXIRI": ["OXALIPLATIN", "IRINOTECAN", "FLUOROURACIL"],
+    "XELIRI": ["IRINOTECAN", "CAPECITABINE"],
+    "CAPECITABINE_MONO": ["CAPECITABINE"],
+    "FLUOROURACIL_LV": ["FLUOROURACIL"],
+    "TAS102": ["TAS102"],
+    "FOLFOX_BEV": ["OXALIPLATIN", "FLUOROURACIL", "BEVACIZUMAB"],
+    "FOLFIRI_BEV": ["IRINOTECAN", "FLUOROURACIL", "BEVACIZUMAB"],
+    "CAPOX_BEV": ["OXALIPLATIN", "CAPECITABINE", "BEVACIZUMAB"],
+    "FOLFOXIRI_BEV": ["OXALIPLATIN", "IRINOTECAN", "FLUOROURACIL", "BEVACIZUMAB"],
+    "FOLFOXIRI_PANIT": ["OXALIPLATIN", "IRINOTECAN", "FLUOROURACIL", "PANITUMUMAB"],
+    "FOLFOX_CETUX": ["OXALIPLATIN", "FLUOROURACIL", "CETUXIMAB"],
+    "FOLFIRI_CETUX": ["IRINOTECAN", "FLUOROURACIL", "CETUXIMAB"],
+    "FOLFOX_PANIT": ["OXALIPLATIN", "FLUOROURACIL", "PANITUMUMAB"],
+    "FOLFIRI_PANIT": ["IRINOTECAN", "FLUOROURACIL", "PANITUMUMAB"],
+    "RAMUCIRUMAB_FOLFIRI": ["IRINOTECAN", "FLUOROURACIL", "RAMUCIRUMAB"],
+    "AFLIBERCEPT_FOLFIRI": ["IRINOTECAN", "FLUOROURACIL", "AFLIBERCEPT"],
+    "ENCORAFENIB_CETUXIMAB": ["ENCORAFENIB", "CETUXIMAB"],
+    "REGORAFENIB": ["REGORAFENIB"],
+    "BEVACIZUMAB_MAINT_Q2W": ["BEVACIZUMAB"],
+    "BEVACIZUMAB_MAINT_Q3W": ["BEVACIZUMAB"],
+    "CETUXIMAB_MAINT_Q2W": ["CETUXIMAB"],
+    "PANITUMUMAB_MAINT_Q2W": ["PANITUMUMAB"],
+    "CAPECITABINE_BEV_MAINT": ["CAPECITABINE", "BEVACIZUMAB"],
+    "PEMBROLIZUMAB_Q3W": ["IMMUNOTHERAPY"],
+    "PEMBROLIZUMAB_Q6W": ["IMMUNOTHERAPY"],
+    "NIVOLUMAB_Q2W": ["IMMUNOTHERAPY"],
+    "NIVOLUMAB_Q4W": ["IMMUNOTHERAPY"],
+    "NIVOLUMAB_IPILIMUMAB": ["IMMUNOTHERAPY", "IPILIMUMAB"],
+    "ATEZOLIZUMAB_BEV": ["IMMUNOTHERAPY", "BEVACIZUMAB"],
+    "DURVALUMAB_Q4W": ["IMMUNOTHERAPY"],
+    "TISLELIZUMAB_Q3W": ["IMMUNOTHERAPY"],
+    "SINTILIMAB_Q3W": ["IMMUNOTHERAPY"],
+    "TRASTUZUMAB_PERTUZUMAB_FOLFIRI": ["IRINOTECAN", "FLUOROURACIL", "TRASTUZUMAB", "PERTUZUMAB"],
+    "FRUQUINTINIB": ["FRUQUINTINIB"],
+    "TRASTUZUMAB_ADDON": ["TRASTUZUMAB"],
+    "PERTUZUMAB_ADDON": ["PERTUZUMAB"],
+    "BEVACIZUMAB_ADDON": ["BEVACIZUMAB"]
+  },
+  "drugs": [
+    {
+      "code": "OXALIPLATIN",
+      "displayName": "奥沙利铂",
+      "sideEffects": [
+        {
+          "symptomKey": "cipn",
+          "label": "周围神经病变",
+          "watchFor": ["手指/脚趾麻木、刺痛", "遇冷时症状加重", "扣扣子、写字等精细动作困难"],
+          "selfCare": ["注意保暖，避免冷饮和触碰冰冷物体", "使用温水洗手、刷牙", "穿保暖手套和袜套", "行走时注意安全，防跌倒"],
+          "callDoctor": ["麻木影响日常生活或行走", "症状快速加重", "出现跌倒或无法持物"],
+          "sources": ["NCCN Colon Cancer v2024", "NMPA 奥沙利铂说明书"]
+        },
+        {
+          "symptomKey": "nausea",
+          "label": "恶心/呕吐",
+          "watchFor": ["持续恶心影响进食", "呕吐导致无法进水"],
+          "selfCare": ["少量多餐，避免油腻食物", "按医嘱使用止吐药", "症状轻时可尝试姜茶、苏打饼干"],
+          "callDoctor": ["24 小时内呕吐 ≥3 次", "无法进食进水", "呕吐物带血"],
+          "sources": ["NCCN Antiemesis Guidelines", "NMPA 奥沙利铂说明书"]
+        },
+        {
+          "symptomKey": "diarrhea",
+          "label": "腹泻",
+          "watchFor": ["排便次数明显增多", "水样便或伴腹痛"],
+          "selfCare": ["补充足量水分和电解质", "清淡低纤维饮食", "记录排便次数"],
+          "callDoctor": ["每日腹泻 ≥6 次", "伴发热或血便", "头晕、尿量减少等脱水表现"],
+          "sources": ["NCCN Colon Cancer v2024", "ASCO mCRC 指南"]
+        }
+      ]
+    },
+    {
+      "code": "IRINOTECAN",
+      "displayName": "伊立替康",
+      "sideEffects": [
+        {
+          "symptomKey": "diarrhea",
+          "label": "延迟性腹泻",
+          "watchFor": ["用药后数日至一周出现腹泻", "水样便、伴腹痛或痉挛"],
+          "selfCare": ["立即开始补水", "按医嘱准备洛哌丁胺（需医生指导何时可用）", "记录排便次数和时间", "避免高纤维和乳制品"],
+          "callDoctor": ["每日腹泻 ≥6 次", "伴发热", "严重腹痛或血便", "出现脱水（头晕、少尿）"],
+          "sources": ["NCCN Colon Cancer v2024", "NMPA 伊立替康说明书"]
+        },
+        {
+          "symptomKey": "nausea",
+          "label": "恶心/呕吐",
+          "watchFor": ["用药后当天或次日出现", "影响进食和饮水"],
+          "selfCare": ["按医嘱使用止吐药", "少量多餐", "避免气味强烈的食物"],
+          "callDoctor": ["无法进食进水超过 24 小时", "呕吐频繁"],
+          "sources": ["NCCN Antiemesis Guidelines"]
+        },
+        {
+          "symptomKey": "neutropenia",
+          "label": "骨髓抑制（中性粒细胞减少）",
+          "watchFor": ["反复发热 ≥38℃", "咽痛、口腔溃疡", "异常乏力"],
+          "selfCare": ["避免去人群密集场所", "注意手卫生", "每日监测体温"],
+          "callDoctor": ["体温 ≥38℃", "寒战", "严重乏力或感染迹象"],
+          "sources": ["NCCN Colon Cancer v2024", "NMPA 伊立替康说明书"]
+        }
+      ]
+    },
+    {
+      "code": "FLUOROURACIL",
+      "displayName": "5-氟尿嘧啶（5-FU）",
+      "sideEffects": [
+        {
+          "symptomKey": "diarrhea",
+          "label": "腹泻",
+          "watchFor": ["排便次数增多", "稀便或水样便"],
+          "selfCare": ["补充足量水分", "清淡饮食", "记录排便次数"],
+          "callDoctor": ["每日 ≥6 次", "伴发热或血便", "脱水症状"],
+          "sources": ["NCCN Colon Cancer v2024"]
+        },
+        {
+          "symptomKey": "hfs",
+          "label": "手足综合征",
+          "watchFor": ["手掌、足底红肿", "脱皮、疼痛或水疱"],
+          "selfCare": ["避免长时间行走和重体力劳动", "使用含 10% 尿素霜保湿", "穿宽松软底鞋", "避免热水洗手"],
+          "callDoctor": ["二级及以上（影响行走）", "大面积水疱或破溃", "合并感染（红肿热痛加重）"],
+          "sources": ["NCCN Colon Cancer v2024", "CSCO 结直肠癌诊疗指南"]
+        },
+        {
+          "symptomKey": "stomatitis",
+          "label": "口腔黏膜炎",
+          "watchFor": ["口腔疼痛", "溃疡或白膜", "进食困难"],
+          "selfCare": ["温盐水漱口", "使用软毛牙刷", "避免辛辣、过热食物", "保持口腔湿润"],
+          "callDoctor": ["无法进食", "合并发热", "疼痛严重影响睡眠"],
+          "sources": ["NCCN MASCC 口腔黏膜炎指南"]
+        }
+      ]
+    },
+    {
+      "code": "CAPECITABINE",
+      "displayName": "卡培他滨",
+      "sideEffects": [
+        {
+          "symptomKey": "hfs",
+          "label": "手足综合征",
+          "watchFor": ["手掌、足底麻木或刺痛", "红肿、脱皮、水疱"],
+          "selfCare": ["避免长时间行走和摩擦", "使用含 10% 尿素霜保湿", "穿宽松软底鞋", "避免接触洗涤剂"],
+          "callDoctor": ["二级及以上", "影响日常行走", "水疱破溃或感染"],
+          "sources": ["NCCN Colon Cancer v2024", "NMPA 卡培他滨说明书"]
+        },
+        {
+          "symptomKey": "diarrhea",
+          "label": "腹泻",
+          "watchFor": ["排便次数增多", "稀便或水样便"],
+          "selfCare": ["补充足量水分和电解质", "清淡低纤维饮食", "记录排便次数"],
+          "callDoctor": ["每日 ≥6 次", "伴发热或血便", "脱水表现"],
+          "sources": ["NCCN Colon Cancer v2024"]
+        },
+        {
+          "symptomKey": "stomatitis",
+          "label": "口腔黏膜炎",
+          "watchFor": ["口腔疼痛或溃疡", "进食困难"],
+          "selfCare": ["温盐水漱口", "软毛牙刷", "避免辛辣刺激食物"],
+          "callDoctor": ["无法进食", "合并发热"],
+          "sources": ["NCCN MASCC 口腔黏膜炎指南"]
+        }
+      ]
+    },
+    {
+      "code": "BEVACIZUMAB",
+      "displayName": "贝伐珠单抗",
+      "sideEffects": [
+        {
+          "symptomKey": "hypertension",
+          "label": "高血压",
+          "watchFor": ["头痛", "头晕", "视物模糊"],
+          "selfCare": ["按医嘱监测血压", "低盐饮食", "避免剧烈情绪波动"],
+          "callDoctor": ["收缩压 ≥160 或舒张压 ≥100 mmHg", "剧烈头痛或视物改变", "胸痛或呼吸困难"],
+          "sources": ["NCCN Colon Cancer v2024", "NMPA 贝伐珠单抗说明书"]
+        },
+        {
+          "symptomKey": "proteinuria",
+          "label": "蛋白尿",
+          "watchFor": ["通常无症状，需验尿发现", "严重时可出现水肿"],
+          "selfCare": ["按医嘱定期验尿", "适量饮水", "避免高盐饮食"],
+          "callDoctor": ["尿检异常加重", "下肢明显水肿", "尿量明显减少"],
+          "sources": ["NCCN Colon Cancer v2024"]
+        },
+        {
+          "symptomKey": "bleeding",
+          "label": "出血风险",
+          "watchFor": ["鼻出血", "牙龈出血", "黑便或血便", "咳血"],
+          "selfCare": ["使用软毛牙刷", "避免用力擤鼻", "观察 stool 颜色变化"],
+          "callDoctor": ["任何异常出血", "黑便或血便", "呕血或咳血"],
+          "sources": ["NCCN Colon Cancer v2024", "NMPA 贝伐珠单抗说明书"]
+        },
+        {
+          "symptomKey": "wound_healing",
+          "label": "伤口愈合延迟",
+          "watchFor": ["近期手术或计划手术", "伤口红肿、渗液"],
+          "selfCare": ["告知医生用药情况和手术计划", "避免非必要有创操作"],
+          "callDoctor": ["计划手术（需提前与医生讨论停药时间）", "伤口感染或愈合不良"],
+          "sources": ["NCCN Colon Cancer v2024"]
+        }
+      ]
+    },
+    {
+      "code": "CETUXIMAB",
+      "displayName": "西妥昔单抗",
+      "sideEffects": [
+        {
+          "symptomKey": "skin_rash",
+          "label": "痤疮样皮疹",
+          "watchFor": ["面部、胸背出现红色丘疹或脓疱", "干燥、脱屑、瘙痒"],
+          "selfCare": ["温和清洁，避免挤压", "使用无香料保湿霜", "严格防晒", "避免使用酒精类护肤品"],
+          "callDoctor": ["大面积皮疹或合并感染", "严重瘙痒影响睡眠", "出现水疱或糜烂"],
+          "sources": ["NCCN Colon Cancer v2024", "NMPA 西妥昔单抗说明书"]
+        },
+        {
+          "symptomKey": "hypomagnesemia",
+          "label": "低镁血症",
+          "watchFor": ["通常需验血发现", "严重时可肌肉痉挛、心律失常"],
+          "selfCare": ["按医嘱定期验电解质", "均衡饮食"],
+          "callDoctor": ["肌肉痉挛或抽搐", "心悸", "验血提示电解质异常"],
+          "sources": ["NCCN Colon Cancer v2024"]
+        },
+        {
+          "symptomKey": "infusion_reaction",
+          "label": "输注反应",
+          "watchFor": ["输注过程中或之后出现", "寒战、发热、呼吸困难、皮疹"],
+          "selfCare": ["输注时在医疗机构进行", "出现不适立即告知护士"],
+          "callDoctor": ["输注中任何不适", "呼吸困难", "严重皮疹或肿胀"],
+          "sources": ["NMPA 西妥昔单抗说明书"]
+        }
+      ]
+    },
+    {
+      "code": "PANITUMUMAB",
+      "displayName": "帕尼单抗",
+      "sideEffects": [
+        {
+          "symptomKey": "skin_rash",
+          "label": "痤疮样皮疹",
+          "watchFor": ["面部、胸背红色丘疹", "干燥脱屑、瘙痒"],
+          "selfCare": ["温和清洁和保湿", "严格防晒", "避免挤压"],
+          "callDoctor": ["大面积或感染迹象", "严重瘙痒", "水疱或糜烂"],
+          "sources": ["NCCN Colon Cancer v2024"]
+        },
+        {
+          "symptomKey": "hypomagnesemia",
+          "label": "低镁血症",
+          "watchFor": ["需验血发现", "肌肉痉挛"],
+          "selfCare": ["按医嘱定期验电解质"],
+          "callDoctor": ["肌肉痉挛", "验血异常"],
+          "sources": ["NCCN Colon Cancer v2024"]
+        },
+        {
+          "symptomKey": "diarrhea",
+          "label": "腹泻",
+          "watchFor": ["排便次数增多"],
+          "selfCare": ["补水、清淡饮食", "记录排便次数"],
+          "callDoctor": ["每日 ≥6 次", "伴发热或血便"],
+          "sources": ["NCCN Colon Cancer v2024"]
+        }
+      ]
+    },
+    {
+      "code": "REGORAFENIB",
+      "displayName": "瑞戈非尼",
+      "sideEffects": [
+        {
+          "symptomKey": "hfs",
+          "label": "手足皮肤反应",
+          "watchFor": ["手掌足底疼痛、红肿", "水疱、脱皮"],
+          "selfCare": ["尿素霜保湿", "避免摩擦和重体力劳动", "宽松软底鞋"],
+          "callDoctor": ["二级及以上", "影响行走", "水疱破溃感染"],
+          "sources": ["NCCN Colon Cancer v2024", "NMPA 瑞戈非尼说明书"]
+        },
+        {
+          "symptomKey": "hypertension",
+          "label": "高血压",
+          "watchFor": ["头痛、头晕"],
+          "selfCare": ["监测血压", "低盐饮食"],
+          "callDoctor": ["血压明显升高", "剧烈头痛"],
+          "sources": ["NMPA 瑞戈非尼说明书"]
+        },
+        {
+          "symptomKey": "diarrhea",
+          "label": "腹泻",
+          "watchFor": ["排便次数增多"],
+          "selfCare": ["补水、清淡饮食"],
+          "callDoctor": ["每日 ≥6 次", "脱水或血便"],
+          "sources": ["NMPA 瑞戈非尼说明书"]
+        },
+        {
+          "symptomKey": "fatigue",
+          "label": "乏力",
+          "watchFor": ["异常疲倦影响日常活动"],
+          "selfCare": ["合理安排休息", "适度活动", "保证营养摄入"],
+          "callDoctor": ["极度乏力无法自理", "伴发热或其他新症状"],
+          "sources": ["NMPA 瑞戈非尼说明书"]
+        }
+      ]
+    },
+    {
+      "code": "IMMUNOTHERAPY",
+      "displayName": "免疫检查点抑制剂",
+      "sideEffects": [
+        {
+          "symptomKey": "diarrhea",
+          "label": "免疫相关结肠炎",
+          "watchFor": ["腹泻次数增多", "腹痛、血便或黏液便"],
+          "selfCare": ["记录排便次数和性状", "补充水分", "不要自行使用止泻药（需医生评估）"],
+          "callDoctor": ["每日 ≥4 次水样便", "血便或严重腹痛", "伴发热"],
+          "sources": ["NCCN Management of Immunotherapy-Related Toxicities", "ASCO irAE 指南"]
+        },
+        {
+          "symptomKey": "pneumonitis",
+          "label": "免疫相关肺炎",
+          "watchFor": ["新出现或加重的咳嗽", "呼吸急促", "胸痛"],
+          "selfCare": ["避免接触烟雾和刺激物", "监测呼吸状况"],
+          "callDoctor": ["呼吸急促或呼吸困难", "持续咳嗽加重", "发热伴咳嗽"],
+          "sources": ["NCCN Management of Immunotherapy-Related Toxicities"]
+        },
+        {
+          "symptomKey": "thyroid",
+          "label": "甲状腺功能异常",
+          "watchFor": ["异常乏力或心悸", "怕热/怕冷", "体重明显变化"],
+          "selfCare": ["按医嘱定期验甲状腺功能"],
+          "callDoctor": ["心悸或严重乏力", "验血提示异常"],
+          "sources": ["NCCN Management of Immunotherapy-Related Toxicities"]
+        },
+        {
+          "symptomKey": "skin_rash",
+          "label": "免疫相关皮疹",
+          "watchFor": ["广泛皮疹或瘙痒", "水疱、糜烂"],
+          "selfCare": ["温和保湿", "避免抓挠", "记录皮疹范围变化"],
+          "callDoctor": ["大面积皮疹", "水疱或糜烂", "伴发热"],
+          "sources": ["NCCN Management of Immunotherapy-Related Toxicities"]
+        },
+        {
+          "symptomKey": "hepatitis",
+          "label": "免疫相关肝炎",
+          "watchFor": ["通常需验血发现", "可伴乏力、恶心、尿色加深"],
+          "selfCare": ["按医嘱定期验肝功能", "避免自行服用肝毒性药物或保健品"],
+          "callDoctor": ["眼白或皮肤发黄", "尿色如茶", "验血提示转氨酶明显升高"],
+          "sources": ["NCCN Management of Immunotherapy-Related Toxicities"]
+        }
+      ]
+    },
+    {
+      "code": "IPILIMUMAB",
+      "displayName": "伊匹木单抗",
+      "sideEffects": [
+        {
+          "symptomKey": "diarrhea",
+          "label": "免疫相关结肠炎",
+          "watchFor": ["腹泻、腹痛", "血便"],
+          "selfCare": ["记录排便情况", "补充水分", "不要自行用止泻药"],
+          "callDoctor": ["每日 ≥4 次水样便", "血便或严重腹痛", "发热"],
+          "sources": ["NCCN Management of Immunotherapy-Related Toxicities"]
+        },
+        {
+          "symptomKey": "endocrine",
+          "label": "内分泌毒性",
+          "watchFor": ["极度乏力", "头痛、视觉改变", "异常口渴或多尿"],
+          "selfCare": ["按医嘱验激素和甲状腺功能"],
+          "callDoctor": ["严重头痛或视觉改变", "极度乏力", "验血异常"],
+          "sources": ["NCCN Management of Immunotherapy-Related Toxicities"]
+        }
+      ]
+    },
+    {
+      "code": "TAS102",
+      "displayName": "曲氟尿苷替匹嘧啶（TAS-102）",
+      "sideEffects": [
+        {
+          "symptomKey": "neutropenia",
+          "label": "中性粒细胞减少",
+          "watchFor": ["发热 ≥38℃", "反复感染", "异常乏力"],
+          "selfCare": ["每日测体温", "注意手卫生", "避免人群密集场所"],
+          "callDoctor": ["发热 ≥38℃", "寒战", "严重乏力"],
+          "sources": ["NCCN Colon Cancer v2024", "NMPA TAS-102 说明书"]
+        },
+        {
+          "symptomKey": "diarrhea",
+          "label": "腹泻",
+          "watchFor": ["排便次数增多"],
+          "selfCare": ["补水、清淡饮食"],
+          "callDoctor": ["每日 ≥6 次", "脱水或血便"],
+          "sources": ["NMPA TAS-102 说明书"]
+        },
+        {
+          "symptomKey": "nausea",
+          "label": "恶心/呕吐",
+          "watchFor": ["影响进食"],
+          "selfCare": ["少量多餐", "按医嘱止吐"],
+          "callDoctor": ["无法进食进水"],
+          "sources": ["NMPA TAS-102 说明书"]
+        }
+      ]
+    },
+    {
+      "code": "FRUQUINTINIB",
+      "displayName": "呋喹替尼",
+      "sideEffects": [
+        {
+          "symptomKey": "hypertension",
+          "label": "高血压",
+          "watchFor": ["头痛、头晕"],
+          "selfCare": ["监测血压", "低盐饮食"],
+          "callDoctor": ["血压明显升高", "剧烈头痛"],
+          "sources": ["NMPA 呋喹替尼说明书", "CSCO 结直肠癌诊疗指南"]
+        },
+        {
+          "symptomKey": "hfs",
+          "label": "手足综合征",
+          "watchFor": ["手掌足底红肿、脱皮"],
+          "selfCare": ["尿素霜保湿", "避免摩擦", "宽松软底鞋"],
+          "callDoctor": ["二级及以上", "影响行走"],
+          "sources": ["NMPA 呋喹替尼说明书"]
+        },
+        {
+          "symptomKey": "proteinuria",
+          "label": "蛋白尿",
+          "watchFor": ["需验尿发现", "可伴水肿"],
+          "selfCare": ["按医嘱验尿"],
+          "callDoctor": ["尿检异常加重", "明显水肿"],
+          "sources": ["NMPA 呋喹替尼说明书"]
+        }
+      ]
+    },
+    {
+      "code": "RAMUCIRUMAB",
+      "displayName": "雷莫芦单抗",
+      "sideEffects": [
+        {
+          "symptomKey": "hypertension",
+          "label": "高血压",
+          "watchFor": ["头痛、头晕"],
+          "selfCare": ["监测血压"],
+          "callDoctor": ["血压明显升高", "剧烈头痛"],
+          "sources": ["NCCN Colon Cancer v2024"]
+        },
+        {
+          "symptomKey": "proteinuria",
+          "label": "蛋白尿",
+          "watchFor": ["需验尿发现"],
+          "selfCare": ["按医嘱验尿"],
+          "callDoctor": ["尿检异常加重"],
+          "sources": ["NCCN Colon Cancer v2024"]
+        }
+      ]
+    },
+    {
+      "code": "AFLIBERCEPT",
+      "displayName": "阿柏西普",
+      "sideEffects": [
+        {
+          "symptomKey": "hypertension",
+          "label": "高血压",
+          "watchFor": ["头痛、头晕"],
+          "selfCare": ["监测血压"],
+          "callDoctor": ["血压明显升高"],
+          "sources": ["NCCN Colon Cancer v2024"]
+        },
+        {
+          "symptomKey": "bleeding",
+          "label": "出血风险",
+          "watchFor": ["鼻出血、牙龈出血", "黑便或血便"],
+          "selfCare": ["软毛牙刷", "观察 stool"],
+          "callDoctor": ["异常出血", "黑便或血便"],
+          "sources": ["NCCN Colon Cancer v2024"]
+        }
+      ]
+    },
+    {
+      "code": "ENCORAFENIB",
+      "displayName": "恩考芬尼",
+      "sideEffects": [
+        {
+          "symptomKey": "skin_rash",
+          "label": "皮肤反应",
+          "watchFor": ["新出现皮疹", "光敏感"],
+          "selfCare": ["严格防晒", "温和保湿"],
+          "callDoctor": ["大面积皮疹", "水疱"],
+          "sources": ["NCCN Colon Cancer v2024"]
+        },
+        {
+          "symptomKey": "fatigue",
+          "label": "乏力",
+          "watchFor": ["异常疲倦"],
+          "selfCare": ["合理安排休息"],
+          "callDoctor": ["极度乏力"],
+          "sources": ["NCCN Colon Cancer v2024"]
+        }
+      ]
+    },
+    {
+      "code": "TRASTUZUMAB",
+      "displayName": "曲妥珠单抗",
+      "sideEffects": [
+        {
+          "symptomKey": "cardiotoxicity",
+          "label": "心脏毒性",
+          "watchFor": ["活动后气促", "下肢水肿", "心悸"],
+          "selfCare": ["按医嘱监测心功能", "避免过度劳累"],
+          "callDoctor": ["明显气促或水肿", "胸痛", "心悸加重"],
+          "sources": ["NCCN Colon Cancer v2024"]
+        },
+        {
+          "symptomKey": "infusion_reaction",
+          "label": "输注反应",
+          "watchFor": ["寒战、发热", "呼吸困难"],
+          "selfCare": ["输注时在医疗机构"],
+          "callDoctor": ["输注中任何不适", "呼吸困难"],
+          "sources": ["NMPA 曲妥珠单抗说明书"]
+        }
+      ]
+    },
+    {
+      "code": "PERTUZUMAB",
+      "displayName": "帕妥珠单抗",
+      "sideEffects": [
+        {
+          "symptomKey": "diarrhea",
+          "label": "腹泻",
+          "watchFor": ["排便次数增多"],
+          "selfCare": ["补水、清淡饮食"],
+          "callDoctor": ["每日 ≥6 次", "脱水"],
+          "sources": ["NCCN Colon Cancer v2024"]
+        },
+        {
+          "symptomKey": "infusion_reaction",
+          "label": "输注反应",
+          "watchFor": ["寒战、发热", "呼吸困难"],
+          "selfCare": ["输注时在医疗机构"],
+          "callDoctor": ["输注中不适", "呼吸困难"],
+          "sources": ["NCCN Colon Cancer v2024"]
+        }
+      ]
+    }
+  ]
+}
