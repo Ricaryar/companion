@@ -10,6 +10,7 @@ struct HomeView: View {
     @Query(sort: \ScheduleEvent.plannedAt) private var allEvents: [ScheduleEvent]
 
     @State private var showSymptomCheckIn = false
+    @State private var healthBeans = HealthBeansStore.shared
 
     private var todayEvents: [ScheduleEvent] {
         let cal = Calendar.current
@@ -32,6 +33,27 @@ struct HomeView: View {
             }
             .background(AppTheme.screenBackground)
             .navigationTitle("首页")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink {
+                        HealthTasksView()
+                    } label: {
+                        HStack(spacing: 4) {
+                            Image(systemName: "leaf.fill")
+                                .foregroundStyle(.orange)
+                            Text("\(healthBeans.balance)")
+                                .font(.subheadline.weight(.semibold))
+                                .monospacedDigit()
+                        }
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 6)
+                        .background(Color.orange.opacity(0.12))
+                        .clipShape(Capsule())
+                        .accessibilityLabel("健康豆 \(healthBeans.balance)")
+                    }
+                }
+            }
+            .onAppear { healthBeans.rollDayIfNeeded() }
             .sheet(isPresented: $showSymptomCheckIn) {
                 SymptomCheckInView()
             }

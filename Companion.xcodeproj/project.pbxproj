@@ -10,9 +10,22 @@
 		AA0000010000000000000001 /* Companion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Companion.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		AA0000021000000000000001 /* Exceptions for "Companion" folder in "Companion" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = AA0000060000000000000001 /* Companion */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		AA0000020000000000000001 /* Companion */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				AA0000021000000000000001 /* Exceptions for "Companion" folder in "Companion" target */,
+			);
 			path = Companion;
 			sourceTree = "<group>";
 		};
@@ -256,6 +269,7 @@
 				DEVELOPMENT_TEAM = JBXVD72DW9;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Companion/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "伴行";
 				INFOPLIST_KEY_NSCameraUsageDescription = "伴行需要相机拍摄报告，照片仅在本地处理与保存。";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "伴行需要保存报告图片到你的相册。";
@@ -289,6 +303,7 @@
 				DEVELOPMENT_TEAM = JBXVD72DW9;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Companion/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "伴行";
 				INFOPLIST_KEY_NSCameraUsageDescription = "伴行需要相机拍摄报告，照片仅在本地处理与保存。";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "伴行需要保存报告图片到你的相册。";
