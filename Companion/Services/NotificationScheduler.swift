@@ -44,6 +44,31 @@ enum NotificationScheduler {
         )
     }
 
+    /// 立即推送一条本地通知（会出现在通知中心）。
+    static func deliverNow(
+        id: String,
+        title: String,
+        body: String,
+        userInfo: [AnyHashable: Any] = [:]
+    ) async {
+        _ = await requestAuthorizationIfNeeded()
+        let content = UNMutableNotificationContent()
+        content.title = title
+        content.body = body
+        content.sound = .default
+        content.userInfo = userInfo
+        // 极短延迟，确保可进入通知中心；前台由 delegate 决定是否展示横幅
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.3, repeats: false)
+        try? await UNUserNotificationCenter.current().add(
+            UNNotificationRequest(identifier: id, content: content, trigger: trigger)
+        )
+    }
+
+    static let consultationReplyCategory = "consultation-reply"
+    static let consultationIdKey = "consultationId"
+    static let notificationTypeKey = "notificationType"
+    static let doctorFollowUpType = "doctor-followup"
+
     static func cancelNotification(id: String) {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [id])
     }

@@ -4,9 +4,8 @@ struct SettingsView: View {
     @State private var settings = AppSettings.shared
 
     var body: some View {
-        NavigationStack {
-            Form {
-                Section("打卡与提醒") {
+        Form {
+            Section("打卡与提醒") {
                     Picker("打卡偏好", selection: Binding(
                         get: { settings.checkInPreference },
                         set: { settings.checkInPreference = $0 }
@@ -61,15 +60,16 @@ struct SettingsView: View {
                     }
                 }
 
-                Section {
-                    DisclaimerFooter()
-                }
+            Section {
+                DisclaimerFooter()
             }
-            .navigationTitle("设置")
         }
+        .navigationTitle("设置")
     }
 }
 
 #Preview {
-    SettingsView()
+    NavigationStack {
+        SettingsView()
+    }
 }

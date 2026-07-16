@@ -9,5 +9,7 @@
 		<string>mqqapi</string>
 		<string>whatsapp</string>
 	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>伴行需要获取您的位置，用于标注您执业医院所在地。</string>
 </dict>
 </plist>

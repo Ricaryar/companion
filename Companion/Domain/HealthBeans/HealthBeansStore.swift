@@ -18,6 +18,9 @@ final class HealthBeansStore {
     static let shareReward = 15
     static let quizRewardPerCorrect = 5
     static let quizDailyLimit = 3
+    static let articleReward = 10
+    static let articleDailyLimit = 5
+    static let articleRequiredSeconds = 30
 
     /// 充值比例：1 元 = 10 健康豆
     static let rechargeBeansPerYuan = 10
@@ -28,6 +31,7 @@ final class HealthBeansStore {
 
     private let defaults = UserDefaults.standard
     private(set) var changeToken = 0
+    private(set) var ledger: [HealthBeanLedgerEntry] = []
 
     private enum Key {
         static let balance = "healthBeans.balance"
@@ -36,6 +40,7 @@ final class HealthBeansStore {
         static let adsWatched = "healthBeans.adsWatched"
         static let shared = "healthBeans.shared"
         static let quizCorrect = "healthBeans.quizCorrect"
+        static let articlesRead = "healthBeans.articlesRead"
         static let weekKey = "healthBeans.weekKey"
         static let weekCheckInDates = "healthBeans.weekCheckInDates"
         static let weekBonus5Claimed = "healthBeans.weekBonus5Claimed"
@@ -45,9 +50,11 @@ final class HealthBeansStore {
         static let firstBonusClaimedPackageIds = "healthBeans.firstBonusClaimedPackageIds"
         static let monthCardMonthKey = "healthBeans.monthCardMonthKey"
         static let followUpCards = "healthBeans.followUpCards"
+        static let ledger = "healthBeans.ledger"
     }
 
     private init() {
+        loadLedger()
         rollDayIfNeeded()
         rollWeekIfNeeded()
         rollMonthIfNeeded()
@@ -95,6 +102,7 @@ final class HealthBeansStore {
             defaults.set(0, forKey: Key.adsWatched)
             defaults.set(false, forKey: Key.shared)
             defaults.set(0, forKey: Key.quizCorrect)
+            defaults.set(0, forKey: Key.articlesRead)
             bump()
         }
     }
@@ -278,12 +286,70 @@ final class HealthBeansStore {
         }
     }
 
+    var articlesReadToday: Int {
+        get {
+            _ = changeToken
+            rollDayIfNeeded()
+            return defaults.integer(forKey: Key.articlesRead)
+        }
+        set {
+            defaults.set(newValue, forKey: Key.articlesRead)
+            bump()
+        }
+    }
+
     var adsRemainingToday: Int {
         max(0, Self.adDailyLimit - adsWatchedToday)
     }
 
     var quizRemainingToday: Int {
         max(0, Self.quizDailyLimit - quizCorrectToday)
+    }
+
+    var articlesRemainingToday: Int {
+        max(0, Self.articleDailyLimit - articlesReadToday)
+    }
+
+    var ledgerEntries: [HealthBeanLedgerEntry] {
+        _ = changeToken
+        return ledger
+    }
+
+    private func loadLedger() {
+        guard let data = defaults.data(forKey: Key.ledger),
+              let decoded = try? JSONDecoder().decode([HealthBeanLedgerEntry].self, from: data) else {
+            ledger = []
+            return
+        }
+        ledger = decoded
+    }
+
+    private func saveLedger() {
+        if let data = try? JSONEncoder().encode(ledger) {
+            defaults.set(data, forKey: Key.ledger)
+        }
+    }
+
+    private func appendLedger(title: String, amount: Int) {
+        let entry = HealthBeanLedgerEntry(
+            id: UUID().uuidString,
+            date: .now,
+            title: title,
+            amount: amount,
+            balanceAfter: balance
+        )
+        ledger.insert(entry, at: 0)
+        if ledger.count > 500 {
+            ledger = Array(ledger.prefix(500))
+        }
+        saveLedger()
+    }
+
+    /// 入账并记流水。
+    func creditBeans(_ amount: Int, title: String) {
+        guard amount > 0 else { return }
+        balance += amount
+        appendLedger(title: title, amount: amount)
     }
 
     /// 若今日已签到但周进度未计入（兼容升级前旧数据），补记一天。
@@ -316,7 +382,7 @@ final class HealthBeansStore {
         weekCheckInDates = dates
 
         let baseReward = effectiveCheckInReward
-        balance += baseReward
+        creditBeans(baseReward, title: hasActiveMonthCard ? "每日签到（月卡）" : "每日签到")
 
         var weekBonus = 0
         let count = dates.count
@@ -324,12 +390,12 @@ final class HealthBeansStore {
         if count >= Self.weekBonusThreshold5, !defaults.bool(forKey: Key.weekBonus5Claimed) {
             defaults.set(true, forKey: Key.weekBonus5Claimed)
             weekBonus += Self.weekBonusAt5Days
-            balance += Self.weekBonusAt5Days
+            creditBeans(Self.weekBonusAt5Days, title: "周签到满5天奖励")
         }
         if count >= Self.weekBonusThreshold7, !defaults.bool(forKey: Key.weekBonus7Claimed) {
             defaults.set(true, forKey: Key.weekBonus7Claimed)
             weekBonus += Self.weekBonusAt7Days
-            balance += Self.weekBonusAt7Days
+            creditBeans(Self.weekBonusAt7Days, title: "周签到满7天奖励")
         }
 
         bump()
@@ -342,7 +408,7 @@ final class HealthBeansStore {
         rollDayIfNeeded()
         guard adsWatchedToday < Self.adDailyLimit else { return nil }
         adsWatchedToday += 1
-        balance += Self.adReward
+        creditBeans(Self.adReward, title: "观看广告")
         return Self.adReward
     }
 
@@ -351,7 +417,7 @@ final class HealthBeansStore {
         rollDayIfNeeded()
         guard !hasSharedToday else { return nil }
         hasSharedToday = true
-        balance += Self.shareReward
+        creditBeans(Self.shareReward, title: "分享今日打卡")
         return Self.shareReward
     }
 
@@ -360,8 +426,17 @@ final class HealthBeansStore {
         rollDayIfNeeded()
         guard quizCorrectToday < Self.quizDailyLimit else { return nil }
         quizCorrectToday += 1
-        balance += Self.quizRewardPerCorrect
+        creditBeans(Self.quizRewardPerCorrect, title: "健康测验答对")
         return Self.quizRewardPerCorrect
+    }
+
+    @discardableResult
+    func claimArticleReward(articleTitle: String) -> Int? {
+        rollDayIfNeeded()
+        guard articlesReadToday < Self.articleDailyLimit else { return nil }
+        articlesReadToday += 1
+        creditBeans(Self.articleReward, title: "阅读科普：\(articleTitle)")
+        return Self.articleReward
     }
 
     struct RechargeResult {
@@ -381,7 +456,12 @@ final class HealthBeansStore {
         let isFirst = package.firstPurchaseBonus > 0 && !hasClaimedFirstBonus(forPackageId: package.id)
         let bonus = isFirst ? package.firstPurchaseBonus : 0
         let total = package.beans + bonus
-        balance += total
+        if bonus > 0 {
+            creditBeans(package.beans, title: "充值 \(package.beans) 健康豆")
+            creditBeans(bonus, title: "充值首充赠送")
+        } else {
+            creditBeans(total, title: "充值 \(package.beans) 健康豆")
+        }
         if isFirst {
             var claimed = firstBonusClaimedPackageIds
             claimed.insert(package.id)
@@ -416,6 +496,32 @@ final class HealthBeansStore {
         bump()
         return MonthCardPurchaseResult(followUpCards: Self.monthCardFollowUpCards, alreadyActive: false)
     }
+
+    /// 发起咨询费用：月卡用户 120，否则 150。
+    var consultationAskCost: Int {
+        hasActiveMonthCard ? ConsultationRules.monthCardAskCost : ConsultationRules.baseAskCost
+    }
+
+    @discardableResult
+    func spendBeans(_ amount: Int, title: String) -> Bool {
+        guard amount > 0, balance >= amount else { return false }
+        balance -= amount
+        appendLedger(title: title, amount: -amount)
+        return true
+    }
+
+    func refundBeans(_ amount: Int, title: String) {
+        guard amount > 0 else { return }
+        creditBeans(amount, title: title)
+    }
+
+    /// 消耗一张免费追问卡；不足则返回 false。
+    @discardableResult
+    func consumeFollowUpCard() -> Bool {
+        guard followUpCards > 0 else { return false }
+        followUpCards -= 1
+        return true
+    }
 }
 
 struct HealthBeanRechargePackage: Identifiable, Equatable {
@@ -437,7 +543,7 @@ struct HealthBeanRechargePackage: Identifiable, Equatable {
             priceYuan: 6,
             firstPurchaseBonus: 0,
             badge: nil,
-            subtitle: "可追问2次",
+            subtitle: "到账60健康豆",
             followUpCards: 2
         ),
         HealthBeanRechargePackage(

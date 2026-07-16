@@ -11,6 +11,7 @@ struct HealthTasksView: View {
     @State private var showShareChannels = false
     @State private var showQuiz = false
     @State private var showHelp = false
+    @State private var showArticles = false
 
     private var todayLog: SymptomLog? {
         symptomLogs.first { Calendar.current.isDateInToday($0.date) }
@@ -71,6 +72,11 @@ struct HealthTasksView: View {
                 HealthQuizView()
             }
         }
+        .sheet(isPresented: $showArticles) {
+            NavigationStack {
+                HealthArticleListView()
+            }
+        }
         .overlay(alignment: .bottom) {
             if let toastMessage {
                 Text(toastMessage)
@@ -95,22 +101,38 @@ struct HealthTasksView: View {
 
     private var balanceCard: some View {
         HStack(spacing: 14) {
-            ZStack {
-                Circle()
-                    .fill(Color.orange.opacity(0.18))
-                    .frame(width: 52, height: 52)
-                Image(systemName: "leaf.fill")
-                    .font(.title2)
-                    .foregroundStyle(.orange)
+            NavigationLink {
+                HealthBeansLedgerView()
+            } label: {
+                HStack(spacing: 14) {
+                    ZStack {
+                        Circle()
+                            .fill(Color.orange.opacity(0.18))
+                            .frame(width: 52, height: 52)
+                        Image(systemName: "leaf.fill")
+                            .font(.title2)
+                            .foregroundStyle(.orange)
+                    }
+                    VStack(alignment: .leading, spacing: 4) {
+                        HStack(spacing: 4) {
+                            Text("我的健康豆")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                            Image(systemName: "chevron.right")
+                                .font(.caption2)
+                                .foregroundStyle(.tertiary)
+                        }
+                        Text("\(beans.balance)")
+                            .font(.system(size: 32, weight: .bold, design: .rounded))
+                            .foregroundStyle(.primary)
+                        Text("点击查看流水")
+                            .font(.caption2)
+                            .foregroundStyle(.tertiary)
+                    }
+                }
             }
-            VStack(alignment: .leading, spacing: 4) {
-                Text("我的健康豆")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                Text("\(beans.balance)")
-                    .font(.system(size: 32, weight: .bold, design: .rounded))
-                    .foregroundStyle(.primary)
-            }
+            .buttonStyle(.plain)
+
             Spacer()
             NavigationLink {
                 HealthBeansRechargeView()
@@ -163,6 +185,15 @@ struct HealthTasksView: View {
                         showShareChannels = true
                     }
                 }
+            )
+
+            taskRow(
+                icon: "book.fill",
+                iconColor: AppTheme.brandTeal,
+                title: "浏览阅读科普文章",
+                subtitle: "阅读满 \(HealthBeansStore.articleRequiredSeconds) 秒得 \(HealthBeansStore.articleReward) 豆 · 今日还可 \(beans.articlesRemainingToday)/\(HealthBeansStore.articleDailyLimit) 篇",
+                trailing: beans.articlesRemainingToday == 0 ? .done : .action("去阅读"),
+                action: { showArticles = true }
             )
 
             taskRow(
