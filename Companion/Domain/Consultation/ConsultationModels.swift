@@ -183,7 +183,7 @@ enum ConsultationRules {
     static let dialogDuration: TimeInterval = 6 * 60 * 60
     static let waitingTimeout: TimeInterval = 24 * 60 * 60
     static let ratingReward = 5
-    static let detailMin = 20
-    static let detailMax = 200
+    static let detailMin = 10
+    static let detailMax = 300
     static let maxImages = 3
 }

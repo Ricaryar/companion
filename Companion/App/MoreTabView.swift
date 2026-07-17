@@ -25,6 +25,12 @@ struct MoreTabView: View {
                 }
 
                 NavigationLink {
+                    MedicationShareCommunityView()
+                } label: {
+                    Label("真实用药", systemImage: "pills.fill")
+                }
+
+                NavigationLink {
                     SettingsView()
                 } label: {
                     Label("设置", systemImage: "gearshape.fill")
