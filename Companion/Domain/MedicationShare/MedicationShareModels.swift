@@ -191,11 +191,15 @@ struct MedicationShareNotice: Identifiable, Codable, Equatable, Hashable {
 enum MedicationShareRules {
     static let baseCashYuan = 5
     static let withdrawMinYuan = 10
+    /// 高质标准：浏览量与「有用」同时达标
     static let viewBonusThreshold = 500
     static let viewBonusYuan = 2
     static let usefulBonusThreshold = 50
     static let usefulBonusYuan = 5
     static let scienceTaskBeans = 10
-    static let highValueViewThreshold = 80
     static let adUnlockSeconds = 18
+
+    static func meetsHighQuality(views: Int, useful: Int) -> Bool {
+        views >= viewBonusThreshold && useful >= usefulBonusThreshold
+    }
 }

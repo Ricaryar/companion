@@ -30,11 +30,11 @@ struct MedicationShareComposeView: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 if therapyKind.isCashIncentiveEligible {
-                    Text("该类型审核通过后可获得 \(MedicationShareRules.baseCashYuan) 元现金（满 \(MedicationShareRules.withdrawMinYuan) 元可提现）")
+                    Text("该类型审核通过后可获得 \(MedicationShareRules.baseCashYuan) 元现金（满 \(MedicationShareRules.withdrawMinYuan) 元可提现）。未达高质标准前将同时出现在社区与科普任务区。")
                         .font(.caption)
                         .foregroundStyle(AppTheme.riskGreen)
                 } else {
-                    Text("常见药不纳入现金激励范围，审核后将同时投放至真实用药社区与科普区并奖励健康豆")
+                    Text("常见药不纳入现金激励范围，审核后将自动投放至科普任务区并奖励健康豆")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }

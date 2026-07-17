@@ -96,9 +96,14 @@ struct MedicationShareWalletView: View {
 
     private func statusText(_ item: MedicationShare) -> String {
         switch item.status {
-        case .pending: "审核中"
-        case .approved: item.placement == .community && item.isHighValue ? "已发布（高价值）" : "已发布（社区+科普）"
-        case .rejected: "未通过"
+        case .pending:
+            return "审核中"
+        case .approved:
+            if !item.isIncentiveEligible { return "已投放科普任务区" }
+            if item.isHighValue { return "已发布（高价值置顶）" }
+            return "已发布（社区+科普）"
+        case .rejected:
+            return "未通过"
         }
     }
 }

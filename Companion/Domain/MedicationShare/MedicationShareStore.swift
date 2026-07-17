@@ -9,12 +9,15 @@ final class MedicationShareStore {
     private(set) var cashLedger: [MedicationCashLedgerEntry] = []
     private(set) var cashBalanceCents = 0
     private(set) var unlockedShareIds: Set<String> = []
+    /// 当前用户已点过「有用」的分享（本地单用户演示）
+    private(set) var usefulMarkedShareIds: Set<String> = []
     private(set) var notices: [MedicationShareNotice] = []
     private(set) var changeToken = 0
 
     private let fileURL: URL
     private let cashURL: URL
     private let unlockURL: URL
+    private let usefulURL: URL
     private let noticesURL: URL
     private let imagesFolder: URL
 
@@ -26,25 +29,46 @@ final class MedicationShareStore {
         fileURL = folder.appendingPathComponent("medication-shares.json")
         cashURL = folder.appendingPathComponent("medication-cash.json")
         unlockURL = folder.appendingPathComponent("medication-unlocks.json")
+        usefulURL = folder.appendingPathComponent("medication-useful.json")
         noticesURL = folder.appendingPathComponent("medication-notices.json")
         imagesFolder = folder.appendingPathComponent("MedicationShareImages", isDirectory: true)
         try? FileManager.default.createDirectory(at: imagesFolder, withIntermediateDirectories: true)
         load()
         loadCash()
         loadUnlocks()
+        loadUsefulMarks()
         loadNotices()
         migrateOrdinarySharesToBothIfNeeded()
         seedDemoIfNeeded()
         seedWelcomeNoticeIfNeeded()
     }
 
-    /// 普通价值分享同时投放社区与科普区（兼容旧数据）
+    /// 投放规则校正（兼容旧数据）
     private func migrateOrdinarySharesToBothIfNeeded() {
         var changed = false
         for i in shares.indices {
-            if shares[i].status == .approved, !shares[i].isHighValue, shares[i].placement == .scienceTask {
-                shares[i].placement = .both
-                changed = true
+            let item = shares[i]
+            guard item.status == .approved else { continue }
+            if !item.isIncentiveEligible {
+                // 常见药：仅科普任务
+                if item.placement != .scienceTask || item.isHighValue {
+                    shares[i].placement = .scienceTask
+                    shares[i].isHighValue = false
+                    changed = true
+                }
+            } else if MedicationShareRules.meetsHighQuality(views: item.viewCount, useful: item.usefulCount) {
+                if !item.isHighValue || item.placement != .community {
+                    shares[i].isHighValue = true
+                    shares[i].placement = .community
+                    changed = true
+                }
+            } else {
+                // 激励范围内但未达高质：社区 + 科普
+                if item.placement != .both || item.isHighValue {
+                    shares[i].placement = .both
+                    shares[i].isHighValue = false
+                    changed = true
+                }
             }
         }
         if changed { save() }
@@ -120,6 +144,11 @@ final class MedicationShareStore {
     func isUnlocked(_ id: String) -> Bool {
         _ = changeToken
         return unlockedShareIds.contains(id)
+    }
+
+    func hasMarkedUseful(_ id: String) -> Bool {
+        _ = changeToken
+        return usefulMarkedShareIds.contains(id)
     }
 
     func filteredCommunity(
@@ -206,7 +235,6 @@ final class MedicationShareStore {
         }
 
         let eligible = draft.therapyKind.isCashIncentiveEligible
-        let highValue = eligible && body.count >= 120
         var item = MedicationShare(
             id: UUID().uuidString,
             title: title,
@@ -220,9 +248,9 @@ final class MedicationShareStore {
             drugImageFileNames: drugFiles,
             recordImageFileNames: recordFiles,
             status: .pending,
-            placement: highValue ? .community : .both,
+            placement: eligible ? .both : .scienceTask,
             isIncentiveEligible: eligible,
-            isHighValue: highValue,
+            isHighValue: false,
             viewCount: 0,
             usefulCount: 0,
             authorName: "我",
@@ -252,29 +280,21 @@ final class MedicationShareStore {
         var share = input
         share.status = .approved
         share.publishedAt = .now
-        if share.isIncentiveEligible, share.isHighValue {
-            share.auditMessage = "审核通过，感谢分享真实用药经验。已发放 \(MedicationShareRules.baseCashYuan) 元现金奖励（满 \(MedicationShareRules.withdrawMinYuan) 元可提现）。后续浏览量与「有用」达标还可继续补贴。"
-            share.placement = .community
-            share.isHighValue = true
-            appendNotice(
-                title: "分享审核通过",
-                body: "「\(share.title)」已发布，并获得 \(MedicationShareRules.baseCashYuan) 元现金奖励。"
-            )
-        } else if share.isIncentiveEligible {
-            share.auditMessage = "审核通过，感谢分享。已发放 \(MedicationShareRules.baseCashYuan) 元现金奖励。您的普通价值分享已同时投放至真实用药社区与科普任务区。"
+        if share.isIncentiveEligible {
             share.placement = .both
             share.isHighValue = false
+            share.auditMessage = "审核通过，感谢分享。已发放 \(MedicationShareRules.baseCashYuan) 元现金奖励。未达高质标准前，将同时投放真实用药社区与科普任务区；浏览 ≥\(MedicationShareRules.viewBonusThreshold) 且「有用」≥\(MedicationShareRules.usefulBonusThreshold) 后升级为高价值置顶。"
             appendNotice(
                 title: "分享审核通过",
                 body: "「\(share.title)」已发布并获得 \(MedicationShareRules.baseCashYuan) 元，已同步投放社区与科普区。"
             )
         } else {
-            share.auditMessage = "感谢分享，但常见药暂不纳入现金激励范围。您的分享已同时投放至真实用药社区与科普区（积分任务）。"
-            share.placement = .both
+            share.placement = .scienceTask
             share.isHighValue = false
+            share.auditMessage = "感谢分享，但常见药暂不纳入现金激励范围。您的分享已自动投放至科普区（积分任务）。"
             appendNotice(
-                title: "分享已投放",
-                body: "「\(share.title)」审核完成：常见药暂不纳入现金激励，已投放至社区与科普区。"
+                title: "分享已投放科普区",
+                body: "「\(share.title)」审核完成：常见药暂不纳入现金激励，已投放至科普任务区。"
             )
             HealthBeansStore.shared.creditBeans(
                 MedicationShareRules.scienceTaskBeans,
@@ -291,23 +311,45 @@ final class MedicationShareStore {
         shares[index].viewCount += 1
         bump()
         maybeAwardViewBonus(shareId: id)
-        // 高热后可持续补贴：本地演示为浏览破阈值后提升为高价值，仅保留社区投放
-        if shares[index].isIncentiveEligible,
-           shares[index].viewCount >= MedicationShareRules.highValueViewThreshold {
-            shares[index].isHighValue = true
-            shares[index].placement = .community
-            bump()
-        }
+        refreshHighQualityStatus(shareId: id)
     }
 
+    /// 标记有用：同一用户对同一分享仅可一次
     @discardableResult
-    func toggleUseful(id: String) -> Bool {
-        guard let index = shares.firstIndex(where: { $0.id == id }) else { return false }
-        // 简化：每次点击 +1（本地演示）
+    func markUseful(id: String) -> Result<Int, ShareError> {
+        guard shares.contains(where: { $0.id == id }) else {
+            return .failure(.message("未找到该分享"))
+        }
+        guard !usefulMarkedShareIds.contains(id) else {
+            return .failure(.message("您已标记过有用"))
+        }
+        guard let index = shares.firstIndex(where: { $0.id == id }) else {
+            return .failure(.message("未找到该分享"))
+        }
+        usefulMarkedShareIds.insert(id)
+        saveUsefulMarks()
         shares[index].usefulCount += 1
         bump()
         maybeAwardUsefulBonus(shareId: id)
-        return true
+        refreshHighQualityStatus(shareId: id)
+        return .success(shares[index].usefulCount)
+    }
+
+    /// 达到 500 浏览且 50 有用后，升级为高价值并仅保留社区投放、置顶
+    private func refreshHighQualityStatus(shareId: String) {
+        guard let index = shares.firstIndex(where: { $0.id == shareId }) else { return }
+        guard shares[index].isIncentiveEligible else { return }
+        let item = shares[index]
+        let qualified = MedicationShareRules.meetsHighQuality(views: item.viewCount, useful: item.usefulCount)
+        guard qualified else { return }
+        guard !item.isHighValue || item.placement != .community else { return }
+        shares[index].isHighValue = true
+        shares[index].placement = .community
+        bump()
+        appendNotice(
+            title: "分享升级为高价值",
+            body: "「\(item.title)」已达到高质标准，已置顶至真实用药社区。"
+        )
     }
 
     func addComment(id: String, text: String) -> Result<Void, ShareError> {
@@ -517,6 +559,21 @@ final class MedicationShareStore {
         unlockedShareIds = Set(ids)
     }
 
+    private func saveUsefulMarks() {
+        let ids = Array(usefulMarkedShareIds)
+        guard let data = try? JSONEncoder().encode(ids) else { return }
+        try? data.write(to: usefulURL, options: [.atomic])
+    }
+
+    private func loadUsefulMarks() {
+        guard let data = try? Data(contentsOf: usefulURL),
+              let ids = try? JSONDecoder().decode([String].self, from: data) else {
+            usefulMarkedShareIds = []
+            return
+        }
+        usefulMarkedShareIds = Set(ids)
+    }
+
     private func saveNotices() {
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
@@ -558,8 +615,8 @@ final class MedicationShareStore {
                 placement: .community,
                 isIncentiveEligible: true,
                 isHighValue: true,
-                viewCount: 128,
-                usefulCount: 36,
+                viewCount: 528,
+                usefulCount: 56,
                 authorName: "病友小周",
                 createdAt: Date().addingTimeInterval(-86400 * 3),
                 publishedAt: Date().addingTimeInterval(-86400 * 3),
@@ -580,9 +637,9 @@ final class MedicationShareStore {
             MedicationShare(
                 id: "demo-med-2",
                 title: "布洛芬退热使用记录（常见药）",
-                summary: "发热时按说明书使用的个人体验，已投放社区与科普区。",
+                summary: "发热时按说明书使用的个人体验，已投放科普任务区。",
                 body: """
-                偶发发热时按说明书服用布洛芬，注意补水与体温监测。本分享属于常见非处方药，不纳入现金激励，同时投放真实用药社区与科普任务区供参考。
+                偶发发热时按说明书服用布洛芬，注意补水与体温监测。本分享属于常见非处方药，不纳入现金激励，已自动投放科普任务区供参考。
                 """,
                 drugName: "布洛芬",
                 category: .respiratory,
@@ -592,7 +649,7 @@ final class MedicationShareStore {
                 drugImageFileNames: [],
                 recordImageFileNames: [],
                 status: .approved,
-                placement: .both,
+                placement: .scienceTask,
                 isIncentiveEligible: false,
                 isHighValue: false,
                 viewCount: 42,
@@ -600,7 +657,7 @@ final class MedicationShareStore {
                 authorName: "匿名用户",
                 createdAt: Date().addingTimeInterval(-86400 * 5),
                 publishedAt: Date().addingTimeInterval(-86400 * 5),
-                auditMessage: "常见药已投放科普区",
+                auditMessage: "常见药已投放科普任务区",
                 comments: [],
                 baseCashAwarded: false,
                 viewBonusAwarded: false,
@@ -624,9 +681,9 @@ final class MedicationShareStore {
                 drugImageFileNames: [],
                 recordImageFileNames: [],
                 status: .approved,
-                placement: .community,
+                placement: .both,
                 isIncentiveEligible: true,
-                isHighValue: true,
+                isHighValue: false,
                 viewCount: 86,
                 usefulCount: 21,
                 authorName: "病友阿陈",

@@ -139,14 +139,22 @@ struct MedicationShareDetailView: View {
             imageStrip(title: "病历本（真实性证明）", names: share.recordImageFileNames)
 
             Button {
-                _ = store.toggleUseful(id: shareId)
-                showToast("已标记有用，感谢反馈")
+                switch store.markUseful(id: shareId) {
+                case .success:
+                    showToast("已标记有用，感谢反馈")
+                case .failure(let error):
+                    showToast(error.localizedDescription)
+                }
             } label: {
-                Label("有用 \(share.usefulCount)", systemImage: "hand.thumbsup.fill")
-                    .frame(maxWidth: .infinity)
+                Label(
+                    store.hasMarkedUseful(shareId) ? "已标记有用 \(share.usefulCount)" : "有用 \(share.usefulCount)",
+                    systemImage: store.hasMarkedUseful(shareId) ? "hand.thumbsup.fill" : "hand.thumbsup"
+                )
+                .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
-            .tint(AppTheme.brandTeal)
+            .tint(store.hasMarkedUseful(shareId) ? AppTheme.riskGreen : AppTheme.brandTeal)
+            .disabled(store.hasMarkedUseful(shareId))
         }
         .companionCard()
     }

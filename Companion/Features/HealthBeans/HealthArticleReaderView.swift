@@ -23,7 +23,7 @@ struct HealthArticleListView: View {
 
             if !scienceShares.isEmpty {
                 Section("真实用药 · 科普投放") {
-                    Text("热度较低或常见药分享会投放至此，阅读同样可领健康豆。")
+                    Text("常见药或热度未达标的激励类分享会投放至此，阅读同样可领健康豆。")
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                     ForEach(scienceShares.prefix(8)) { share in
