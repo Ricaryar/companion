@@ -46,7 +46,7 @@ struct MainTabView: View {
             }
         }
         .onChange(of: deepLink.shouldSelectMoreTab) { _, need in
-            if need {
+            if need, !AccountStore.shared.isDoctorSession {
                 selectedTab = 4
                 deepLink.shouldSelectMoreTab = false
             }

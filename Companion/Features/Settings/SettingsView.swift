@@ -2,6 +2,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @State private var settings = AppSettings.shared
+    @State private var accountStore = AccountStore.shared
 
     var body: some View {
         Form {
@@ -49,6 +50,15 @@ struct SettingsView: View {
                     }
                     NavigationLink("导出摘要") {
                         ExportSummaryView()
+                    }
+                }
+
+                Section("账号") {
+                    if let user = accountStore.currentUser {
+                        LabeledContent("登录邮箱", value: user.email)
+                    }
+                    Button("退出登录", role: .destructive) {
+                        accountStore.logout()
                     }
                 }
 

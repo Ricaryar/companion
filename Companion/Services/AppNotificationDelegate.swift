@@ -8,8 +8,10 @@ final class ConsultationDeepLink {
 
     /// 切换到「提问」Tab
     var shouldSelectAskTab = false
-    /// 切换到「更多」Tab（医生端）
+    /// 切换到「更多」Tab（患者端遗留路由）
     var shouldSelectMoreTab = false
+    /// 医生端：打开工作台内咨询
+    var shouldOpenDoctorWorkspace = false
     /// 打开指定咨询对话（患者）
     var pendingChatId: String?
     /// 打开指定咨询对话（医生）
@@ -22,7 +24,11 @@ final class ConsultationDeepLink {
 
     func openDoctorChat(consultationId: String) {
         pendingDoctorChatId = consultationId
-        shouldSelectMoreTab = true
+        if AccountStore.shared.isDoctorSession {
+            shouldOpenDoctorWorkspace = true
+        } else {
+            shouldSelectMoreTab = true
+        }
     }
 
     func consumePendingChatId() -> String? {

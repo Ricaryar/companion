@@ -3,7 +3,9 @@ import CoreLocation
 
 enum DoctorCertStatus: String, Codable {
     case none
+    case pending
     case approved
+    case rejected
 }
 
 enum DoctorDepartment: String, CaseIterable, Identifiable, Codable {
@@ -23,6 +25,7 @@ enum DoctorDepartment: String, CaseIterable, Identifiable, Codable {
 
 struct DoctorCertification: Codable, Equatable {
     var id: String
+    var accountId: String
     var realName: String
     var gender: String
     var birthDate: Date
@@ -36,6 +39,7 @@ struct DoctorCertification: Codable, Equatable {
     var status: DoctorCertStatus
     var submittedAt: Date
     var approvedAt: Date?
+    var rejectionReason: String?
 
     func toDoctorProfile() -> DoctorProfile {
         DoctorProfile(
@@ -63,11 +67,12 @@ enum DoctorCertError: Error, LocalizedError {
 final class DoctorCertificationStore {
     static let shared = DoctorCertificationStore()
 
-    private(set) var certification: DoctorCertification?
+    private var certificationsByAccount: [String: DoctorCertification] = [:]
     private(set) var changeToken = 0
 
     private let defaults = UserDefaults.standard
-    private let certKey = "doctor.certification"
+    private let certMapKey = "doctor.certifications.byAccount"
+    private let legacyCertKey = "doctor.certification"
     private let imageFolder: URL
 
     private init() {
@@ -79,9 +84,18 @@ final class DoctorCertificationStore {
         load()
     }
 
-    var isApprovedDoctor: Bool {
+    var certification: DoctorCertification? {
         _ = changeToken
-        return certification?.status == .approved
+        guard let accountId = AccountStore.shared.currentUser?.id else { return nil }
+        return certificationsByAccount[accountId]
+    }
+
+    var isApprovedDoctor: Bool {
+        certification?.status == .approved
+    }
+
+    var isPendingReview: Bool {
+        certification?.status == .pending
     }
 
     var doctorProfile: DoctorProfile? {
@@ -94,22 +108,32 @@ final class DoctorCertificationStore {
     }
 
     private func load() {
-        guard let data = defaults.data(forKey: certKey),
-              let decoded = try? JSONDecoder().decode(DoctorCertification.self, from: data) else {
-            certification = nil
-            return
+        if let data = defaults.data(forKey: certMapKey),
+           let decoded = try? JSONDecoder().decode([String: DoctorCertification].self, from: data) {
+            certificationsByAccount = decoded
+        } else if let data = defaults.data(forKey: legacyCertKey),
+                  var legacy = try? JSONDecoder().decode(DoctorCertification.self, from: data) {
+            if legacy.accountId.isEmpty {
+                legacy.accountId = AccountStore.shared.currentUser?.id ?? "legacy"
+            }
+            certificationsByAccount[legacy.accountId] = legacy
+            saveMap()
+            defaults.removeObject(forKey: legacyCertKey)
         }
-        certification = decoded
     }
 
-    private func save() {
-        guard let certification,
-              let data = try? JSONEncoder().encode(certification) else { return }
-        defaults.set(data, forKey: certKey)
+    private func saveMap() {
+        guard let data = try? JSONEncoder().encode(certificationsByAccount) else { return }
+        defaults.set(data, forKey: certMapKey)
         bump()
     }
 
-    /// 测试版：提交后自动通过认证。
+    private func persist(_ cert: DoctorCertification) {
+        certificationsByAccount[cert.accountId] = cert
+        saveMap()
+    }
+
+    /// 提交后进入待审核，不再自动通过。
     @discardableResult
     func submit(
         realName: String,
@@ -123,15 +147,24 @@ final class DoctorCertificationStore {
         idCardBackData: Data?,
         qualificationData: Data?
     ) -> Result<DoctorCertification, DoctorCertError> {
+        guard let accountId = AccountStore.shared.currentUser?.id else {
+            return .failure(.message("请先登录医生账号"))
+        }
+        guard AccountStore.shared.currentUser?.role == .doctor else {
+            return .failure(.message("仅医生账号可提交认证"))
+        }
+
         let trimmedName = realName.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedName.isEmpty else { return .failure(.message("请填写真实姓名")) }
         guard !hospitalName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             return .failure(.message("请填写工作医院"))
         }
 
-        let id = certification?.id ?? UUID().uuidString
+        let existing = certificationsByAccount[accountId]
+        let id = existing?.id ?? UUID().uuidString
         var cert = DoctorCertification(
             id: id,
+            accountId: accountId,
             realName: trimmedName,
             gender: gender,
             birthDate: birthDate,
@@ -142,9 +175,10 @@ final class DoctorCertificationStore {
             idCardFrontFilename: nil,
             idCardBackFilename: nil,
             qualificationFilename: nil,
-            status: .approved,
+            status: .pending,
             submittedAt: .now,
-            approvedAt: .now
+            approvedAt: nil,
+            rejectionReason: nil
         )
 
         if let data = idCardFrontData {
@@ -157,9 +191,31 @@ final class DoctorCertificationStore {
             cert.qualificationFilename = saveImage(data, prefix: "qual")
         }
 
-        certification = cert
-        save()
+        persist(cert)
+        DoctorAuditMailboxStore.shared.notifyCertSubmitted(accountId: accountId, realName: trimmedName)
         return .success(cert)
+    }
+
+    func markApproved(accountId: String) {
+        guard var cert = certificationsByAccount[accountId] else { return }
+        cert.status = .approved
+        cert.approvedAt = .now
+        cert.rejectionReason = nil
+        persist(cert)
+        DoctorAuditMailboxStore.shared.notifyCertApproved(accountId: accountId, realName: cert.realName)
+    }
+
+    func markRejected(accountId: String, reason: String) {
+        guard var cert = certificationsByAccount[accountId] else { return }
+        cert.status = .rejected
+        cert.approvedAt = nil
+        cert.rejectionReason = reason
+        persist(cert)
+        DoctorAuditMailboxStore.shared.notifyCertRejected(
+            accountId: accountId,
+            realName: cert.realName,
+            reason: reason
+        )
     }
 
     private func saveImage(_ data: Data, prefix: String) -> String {

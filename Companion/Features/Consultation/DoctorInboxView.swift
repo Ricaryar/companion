@@ -5,6 +5,9 @@ struct DoctorInboxView: View {
     @State private var doctorStore = DoctorCertificationStore.shared
     @State private var selectedSymptom: SymptomTag = .all
     @State private var segment = 0
+    @State private var showPendingAlert = false
+
+    private var canAnswerPatients: Bool { doctorStore.isApprovedDoctor }
 
     private var waitingList: [Consultation] {
         store.filteredWaiting(symptom: selectedSymptom)
@@ -45,6 +48,11 @@ struct DoctorInboxView: View {
         .navigationTitle("在线回答")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear { store.processTimeouts() }
+        .alert("无法回答", isPresented: $showPendingAlert) {
+            Button("知道了", role: .cancel) {}
+        } message: {
+            Text("正在审核身份中，无法回答。审核通过后可在本页接诊回复。")
+        }
     }
 
     private var filterBar: some View {
@@ -86,6 +94,16 @@ struct DoctorInboxView: View {
                         waitingRow(item)
                     }
                 }
+                .overlay(alignment: .bottom) {
+                    if !canAnswerPatients {
+                        Text("当前为只读模式：可查看患者提问，审核通过后可接诊。")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .padding(8)
+                            .frame(maxWidth: .infinity)
+                            .background(.ultraThinMaterial)
+                    }
+                }
                 .listStyle(.plain)
             }
         }
@@ -101,10 +119,19 @@ struct DoctorInboxView: View {
                 )
             } else {
                 List(activeList) { item in
-                    NavigationLink {
-                        DoctorActiveChatView(consultationId: item.id)
-                    } label: {
-                        activeRow(item)
+                    if canAnswerPatients {
+                        NavigationLink {
+                            DoctorActiveChatView(consultationId: item.id)
+                        } label: {
+                            activeRow(item)
+                        }
+                    } else {
+                        Button {
+                            showPendingAlert = true
+                        } label: {
+                            activeRow(item)
+                        }
+                        .buttonStyle(.plain)
                     }
                 }
                 .listStyle(.plain)
@@ -170,7 +197,10 @@ struct DoctorCaseDetailView: View {
     @State private var doctorStore = DoctorCertificationStore.shared
     @State private var replyText = ""
     @State private var errorMessage: String?
+    @State private var showPendingAlert = false
     @Environment(\.dismiss) private var dismiss
+
+    private var canAnswerPatients: Bool { doctorStore.isApprovedDoctor }
 
     private var item: Consultation? {
         store.consultation(id: consultationId)
@@ -200,21 +230,33 @@ struct DoctorCaseDetailView: View {
                             VStack(alignment: .leading, spacing: 8) {
                                 Text("首次回复（必填）")
                                     .font(.headline)
-                                TextEditor(text: $replyText)
-                                    .frame(minHeight: 140)
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 8)
-                                            .stroke(Color.secondary.opacity(0.2))
-                                    )
-                                Text("接诊后将通知患者，并开启 6 小时对话窗口。")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                                Button("接诊并回复") {
-                                    accept()
+                                if canAnswerPatients {
+                                    TextEditor(text: $replyText)
+                                        .frame(minHeight: 140)
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 8)
+                                                .stroke(Color.secondary.opacity(0.2))
+                                        )
+                                    Text("接诊后将通知患者，并开启 6 小时对话窗口。")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                    Button("接诊并回复") {
+                                        accept()
+                                    }
+                                    .buttonStyle(.borderedProminent)
+                                    .tint(AppTheme.brandTeal)
+                                    .frame(maxWidth: .infinity)
+                                } else {
+                                    Text("身份审核通过前，仅可查看患者提问内容。")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                    Button("接诊并回复") {
+                                        showPendingAlert = true
+                                    }
+                                    .buttonStyle(.borderedProminent)
+                                    .tint(AppTheme.brandGraphite)
+                                    .frame(maxWidth: .infinity)
                                 }
-                                .buttonStyle(.borderedProminent)
-                                .tint(AppTheme.brandTeal)
-                                .frame(maxWidth: .infinity)
                             }
                             .companionCard()
                         } else {
@@ -238,9 +280,18 @@ struct DoctorCaseDetailView: View {
         } message: {
             Text(errorMessage ?? "")
         }
+        .alert("无法回答", isPresented: $showPendingAlert) {
+            Button("知道了", role: .cancel) {}
+        } message: {
+            Text("正在审核身份中，无法回答。")
+        }
     }
 
     private func accept() {
+        guard canAnswerPatients else {
+            showPendingAlert = true
+            return
+        }
         guard let doctor = doctorStore.doctorProfile else {
             errorMessage = "请先完成医生认证"
             return
@@ -261,6 +312,9 @@ struct DoctorActiveChatView: View {
     @State private var doctorStore = DoctorCertificationStore.shared
     @State private var input = ""
     @State private var errorMessage: String?
+    @State private var showPendingAlert = false
+
+    private var canAnswerPatients: Bool { doctorStore.isApprovedDoctor }
 
     private var item: Consultation? {
         store.consultation(id: consultationId)
@@ -291,7 +345,7 @@ struct DoctorActiveChatView: View {
                     .padding()
                 }
 
-                if item.status == .active, !item.isDialogExpired {
+                if item.status == .active, !item.isDialogExpired, canAnswerPatients {
                     HStack {
                         TextField("回复患者…", text: $input, axis: .vertical)
                             .lineLimit(1...4)
@@ -300,6 +354,17 @@ struct DoctorActiveChatView: View {
                             .buttonStyle(.borderedProminent)
                             .tint(AppTheme.brandTeal)
                     }
+                    .padding()
+                    .background(AppTheme.cardBackground)
+                } else if item.status == .active, !item.isDialogExpired {
+                    VStack(spacing: 8) {
+                        Text("正在审核身份中，无法回答")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                        Button("了解详情") { showPendingAlert = true }
+                            .font(.caption)
+                    }
+                    .frame(maxWidth: .infinity)
                     .padding()
                     .background(AppTheme.cardBackground)
                 } else {
@@ -328,9 +393,18 @@ struct DoctorActiveChatView: View {
         } message: {
             Text(errorMessage ?? "")
         }
+        .alert("无法回答", isPresented: $showPendingAlert) {
+            Button("知道了", role: .cancel) {}
+        } message: {
+            Text("正在审核身份中，无法回答。")
+        }
     }
 
     private func send() {
+        guard canAnswerPatients else {
+            showPendingAlert = true
+            return
+        }
         guard let doctorId = doctorStore.certification?.id else { return }
         let result = store.doctorReply(id: consultationId, doctorId: doctorId, text: input)
         switch result {
