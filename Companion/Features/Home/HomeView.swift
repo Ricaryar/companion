@@ -83,19 +83,37 @@ struct HomeView: View {
     }
 
     private var quickActionsSection: some View {
-        HStack(spacing: 12) {
-            quickActionButton(icon: "face.smiling", title: CopyStrings.checkIn, color: .purple) {
-                showSymptomCheckIn = true
+        VStack(spacing: 12) {
+            HStack(spacing: 12) {
+                quickActionButton(icon: "face.smiling", title: CopyStrings.checkIn, color: .purple) {
+                    showSymptomCheckIn = true
+                }
+                NavigationLink {
+                    AddReportView()
+                } label: {
+                    quickActionLabel(icon: "camera.fill", title: CopyStrings.addReport, color: AppTheme.brandIndigo)
+                }
+                NavigationLink {
+                    DoctorPrepView()
+                } label: {
+                    quickActionLabel(icon: "person.2.wave.2", title: "就医准备", color: AppTheme.brandTeal)
+                }
             }
-            NavigationLink {
-                AddReportView()
-            } label: {
-                quickActionLabel(icon: "camera.fill", title: CopyStrings.addReport, color: AppTheme.brandIndigo)
-            }
-            NavigationLink {
-                DoctorPrepView()
-            } label: {
-                quickActionLabel(icon: "person.2.wave.2", title: "就医准备", color: AppTheme.brandTeal)
+
+            HStack(spacing: 12) {
+                NavigationLink {
+                    DocumentsLibraryView(
+                        navigationTitle: "文件",
+                        showMedicalShortcuts: true
+                    )
+                } label: {
+                    quickActionLabel(icon: "folder.fill", title: "文件", color: .orange)
+                }
+                NavigationLink {
+                    MedicationShareCommunityView()
+                } label: {
+                    quickActionLabel(icon: "pills.fill", title: "真实用药", color: AppTheme.riskGreen)
+                }
             }
         }
     }

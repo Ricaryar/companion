@@ -8,7 +8,7 @@ final class ConsultationDeepLink {
 
     /// 切换到「提问」Tab
     var shouldSelectAskTab = false
-    /// 切换到「更多」Tab（患者端遗留路由）
+    /// 切换到「设置」Tab（患者端遗留路由名）
     var shouldSelectMoreTab = false
     /// 医生端：打开工作台内咨询
     var shouldOpenDoctorWorkspace = false

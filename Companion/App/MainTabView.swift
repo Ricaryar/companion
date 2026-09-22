@@ -26,8 +26,8 @@ struct MainTabView: View {
                 .tabItem { Label("趋势", systemImage: "chart.xyaxis.line") }
                 .tag(3)
 
-            MoreTabView()
-                .tabItem { Label("更多", systemImage: "ellipsis.circle.fill") }
+            SettingsTabView()
+                .tabItem { Label("设置", systemImage: "gearshape.fill") }
                 .tag(4)
         }
         .tint(AppTheme.brandTeal)
