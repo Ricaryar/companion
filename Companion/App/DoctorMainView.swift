@@ -1,7 +1,8 @@
 import SwiftUI
 
 private enum DoctorHomeRoute: Hashable {
-    case inbox
+    /// 进入在线回答；为 true 时在未通过认证的情况下弹出提示
+    case inbox(showUncertifiedPrompt: Bool)
     case doctorChat(String)
     case certification
     case auditMail
@@ -14,6 +15,7 @@ struct DoctorMainView: View {
     @State private var deepLink = ConsultationDeepLink.shared
     @State private var path = NavigationPath()
     @State private var showCertSheet = false
+    @State private var showAlreadyCertifiedAlert = false
 
     private var accountId: String? { accountStore.currentUser?.id }
 
@@ -75,10 +77,15 @@ struct DoctorMainView: View {
                     }
                 }
             }
+            .alert("医生认证", isPresented: $showAlreadyCertifiedAlert) {
+                Button("好的", role: .cancel) {}
+            } message: {
+                Text("您已完成医生认证。")
+            }
             .navigationDestination(for: DoctorHomeRoute.self) { route in
                 switch route {
-                case .inbox:
-                    DoctorInboxView()
+                case .inbox(let showUncertifiedPrompt):
+                    DoctorInboxView(showUncertifiedPromptOnAppear: showUncertifiedPrompt)
                 case .doctorChat(let id):
                     DoctorActiveChatView(consultationId: id)
                 case .certification:
@@ -112,30 +119,44 @@ struct DoctorMainView: View {
     }
 
     private var headerCard: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("您好，\(doctorStore.certification?.realName ?? accountStore.currentUser?.email ?? "医生")")
-                .font(.title3.bold())
-            if doctorStore.isApprovedDoctor {
-                Label("已通过认证，可接诊回复", systemImage: "checkmark.seal.fill")
-                    .foregroundStyle(AppTheme.riskGreen)
-                    .font(.subheadline)
-            } else if doctorStore.isPendingReview {
-                Label("身份审核中", systemImage: "clock.fill")
-                    .foregroundStyle(AppTheme.riskYellow)
-                    .font(.subheadline)
-            } else {
-                Text("请先完成医生认证，审核通过后即可接诊。")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+        Button {
+            handleHeaderCardTap()
+        } label: {
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("您好，\(doctorStore.certification?.realName ?? accountStore.currentUser?.email ?? "医生")")
+                        .font(.title3.bold())
+                        .foregroundStyle(.primary)
+                    if doctorStore.isApprovedDoctor {
+                        Label("已通过认证，可接诊回复", systemImage: "checkmark.seal.fill")
+                            .foregroundStyle(AppTheme.riskGreen)
+                            .font(.subheadline)
+                    } else if doctorStore.isPendingReview {
+                        Label("身份审核中，点击查看认证进度", systemImage: "clock.fill")
+                            .foregroundStyle(AppTheme.riskYellow)
+                            .font(.subheadline)
+                    } else {
+                        Text("请先完成医生认证，审核通过后即可接诊。")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                Spacer(minLength: 8)
+                Image(systemName: doctorStore.isApprovedDoctor ? "checkmark.seal" : "chevron.right")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.tertiary)
+                    .padding(.top, 4)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .companionCard()
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .companionCard()
+        .buttonStyle(.plain)
+        .accessibilityHint(doctorStore.isApprovedDoctor ? "双击查看认证状态" : "双击前往医生认证")
     }
 
     private var answerPatientCard: some View {
         Button {
-            path.append(DoctorHomeRoute.inbox)
+            path.append(DoctorHomeRoute.inbox(showUncertifiedPrompt: !doctorStore.isApprovedDoctor))
         } label: {
             HStack(spacing: 16) {
                 Image(systemName: "stethoscope")
@@ -184,6 +205,14 @@ struct DoctorMainView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .companionCard()
+    }
+
+    private func handleHeaderCardTap() {
+        if doctorStore.isApprovedDoctor {
+            showAlreadyCertifiedAlert = true
+        } else {
+            path.append(DoctorHomeRoute.certification)
+        }
     }
 
     private func presentCertIfNeeded() {

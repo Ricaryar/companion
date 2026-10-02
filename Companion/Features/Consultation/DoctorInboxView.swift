@@ -1,11 +1,14 @@
 import SwiftUI
 
 struct DoctorInboxView: View {
+    var showUncertifiedPromptOnAppear: Bool = false
+
     @State private var store = ConsultationStore.shared
     @State private var doctorStore = DoctorCertificationStore.shared
     @State private var selectedSymptom: SymptomTag = .all
     @State private var segment = 0
     @State private var showPendingAlert = false
+    @State private var showUncertifiedAlert = false
 
     private var canAnswerPatients: Bool { doctorStore.isApprovedDoctor }
 
@@ -47,11 +50,21 @@ struct DoctorInboxView: View {
         .background(AppTheme.screenBackground)
         .navigationTitle("在线回答")
         .navigationBarTitleDisplayMode(.inline)
-        .onAppear { store.processTimeouts() }
+        .onAppear {
+            store.processTimeouts()
+            if showUncertifiedPromptOnAppear && !canAnswerPatients {
+                showUncertifiedAlert = true
+            }
+        }
         .alert("无法回答", isPresented: $showPendingAlert) {
             Button("知道了", role: .cancel) {}
         } message: {
             Text("正在审核身份中，无法回答。审核通过后可在本页接诊回复。")
+        }
+        .alert("无法回答", isPresented: $showUncertifiedAlert) {
+            Button("知道了", role: .cancel) {}
+        } message: {
+            Text("该账号未认证，无法回答问题。")
         }
     }
 
